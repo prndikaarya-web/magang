@@ -1,0 +1,3084 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARING BANTER - Satu Data Spasial Kabupaten Bantul</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f4f7fb;
+            color: #172b45;
+            overflow-x: hidden;
+        }
+        .hero-bg {
+            background:
+                radial-gradient(ellipse at center, rgba(37, 99, 235, .34), transparent 66%),
+                linear-gradient(115deg, #0a1b31 0%, #102b4a 52%, #0b1c33 100%);
+            min-height: 100vh;
+            min-height: 100svh;
+            padding: 7rem 1.5rem 4.5rem;
+            isolation: isolate;
+        }
+        .hero-content {
+            width: 100%;
+            max-width: 64rem;
+            margin: auto;
+            text-align: center;
+        }
+        .hero-copy {
+            position: relative;
+            z-index: 3;
+        }
+        .hero-intro {
+            position: relative;
+            max-width: 52rem;
+            margin: 0 auto 4.5rem;
+        }
+        .hero-title {
+            margin: 1rem 0 1.25rem;
+            font-size: clamp(3.25rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -.06em;
+            line-height: 1;
+        }
+        .hero-title .hero-title-accent {
+            margin-left: 0;
+            color: #fff;
+        }
+        .hero-principles {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 19.7rem;
+            pointer-events: none;
+        }
+        .hero-principle {
+            position: absolute;
+            pointer-events: auto;
+        }
+        .hero-principle::after {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: .75rem;
+            height: 100%;
+            content: "";
+        }
+        .hero-principle:nth-child(1) {
+            top: 20%;
+            left: 0;
+        }
+        .hero-principle:nth-child(2) {
+            top: 20%;
+            right: 0;
+        }
+        .hero-principle:nth-child(3) {
+            bottom: 0;
+            left: 0;
+        }
+        .hero-principle:nth-child(4) {
+            right: 0;
+            bottom: 0;
+        }
+        .hero-principle button {
+            display: flex;
+            min-width: 6.8rem;
+            min-height: 3.25rem;
+            align-items: center;
+            gap: .55rem;
+            border: 1px solid rgba(100, 116, 139, .45);
+            border-radius: 1rem;
+            background: rgba(10, 20, 37, .9);
+            padding: .65rem .85rem;
+            cursor: pointer;
+            color: #fff;
+            text-align: left;
+            transition: border-color .2s, background-color .2s;
+        }
+        .hero-principle button:hover,
+        .hero-principle:focus-within button {
+            border-color: rgba(34, 211, 238, .65);
+            background: rgba(15, 30, 52, .98);
+        }
+        .hero-principle button::before {
+            width: .65rem;
+            height: .65rem;
+            flex: 0 0 .65rem;
+            border-radius: 50%;
+            background: #22d3ee;
+            content: "";
+            box-shadow: 0 0 12px rgba(34, 211, 238, .75);
+        }
+        .hero-principle button span {
+            display: block;
+            color: #94a3b8;
+            font-size: .55rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .hero-principle button strong {
+            display: block;
+            margin-top: .15rem;
+            font-size: .68rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .hero-principle-tooltip {
+            position: absolute;
+            top: 0;
+            left: calc(100% + .75rem);
+            z-index: 10;
+            width: min(13rem, calc(100vw - 2rem));
+            max-height: min(28rem, calc(100svh - 2rem));
+            overflow-y: auto;
+            border: 1px solid rgba(100, 116, 139, .5);
+            border-radius: 1rem;
+            background: rgba(17, 31, 52, .98);
+            padding: 1rem;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .35);
+            color: #dbe4f0;
+            font-size: .75rem;
+            line-height: 1.5;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s;
+            visibility: hidden;
+        }
+        .hero-principle-tooltip h2 {
+            margin-bottom: .65rem;
+            color: #facc15;
+            font-size: .85rem;
+            font-weight: 800;
+        }
+        .hero-principle-tooltip ul {
+            margin: 0;
+            padding-left: 1rem;
+            list-style: disc;
+        }
+        .hero-principle-tooltip li + li {
+            margin-top: .45rem;
+        }
+        .hero-principle:hover .hero-principle-tooltip,
+        .hero-principle:focus-within .hero-principle-tooltip {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+        .hero-principle:nth-child(3) .hero-principle-tooltip,
+        .hero-principle:nth-child(4) .hero-principle-tooltip {
+            top: auto;
+            bottom: 0;
+        }
+        @media (min-width: 1024px) {
+            .hero-principle:nth-child(1) .hero-principle-tooltip,
+            .hero-principle:nth-child(3) .hero-principle-tooltip {
+                right: calc(100% + .75rem);
+                left: auto;
+            }
+        }
+        #globe-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: auto;
+            opacity: 0.68;
+            cursor: grab;
+            touch-action: pan-y;
+        }
+        #globe-canvas:active {
+            cursor: grabbing;
+        }
+        #globe-canvas {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .site-header {
+            background: rgba(7, 23, 46, .94);
+            border-bottom: 1px solid rgba(148, 182, 220, .16);
+            box-shadow: 0 8px 30px rgba(3, 12, 27, .18);
+        }
+        .site-header nav a {
+            color: #d5e1f0;
+        }
+        .site-header nav a:hover {
+            color: #67e8f9;
+        }
+        .geo-menu-toggle {
+            border: 0;
+            background: transparent;
+            padding: .5rem 0;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+        .geo-menu-toggle i {
+            transition: transform .2s ease;
+        }
+        .geo-dropdown.is-open .geo-menu-toggle i {
+            transform: rotate(180deg);
+        }
+        .geo-menu {
+            position: absolute;
+            top: calc(100% + 1.15rem);
+            right: 0;
+            width: 12.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: .75rem;
+            background: #fff;
+            padding: .45rem;
+            box-shadow: 0 16px 36px rgba(3, 12, 27, .2);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-.4rem);
+            transition: opacity .18s ease, transform .18s ease, visibility .18s;
+            visibility: hidden;
+        }
+        .geo-dropdown.is-open .geo-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+            visibility: visible;
+        }
+        .site-header nav .geo-menu a {
+            display: block;
+            border-radius: .45rem;
+            padding: .65rem .7rem;
+            color: #1e293b;
+            font-size: .875rem;
+            font-weight: 600;
+            line-height: 1.25rem;
+            white-space: nowrap;
+            transition: background-color .15s, color .15s;
+        }
+        .site-header nav .geo-menu a:hover,
+        .site-header nav .geo-menu a:focus-visible {
+            background: #f1f5f9;
+            color: #1d4ed8;
+            outline: none;
+        }
+        .geo-menu-target {
+            scroll-margin-top: 6rem;
+        }
+        .site-header .social-link {
+            background: rgba(255, 255, 255, .1);
+            color: #dbeafe;
+        }
+        .site-header .social-link:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+        .pillar-section {
+            background: #f5f7fa;
+        }
+        .pillar-shell {
+            border: 0;
+            border-radius: 1.75rem;
+            background: transparent;
+            box-shadow: none;
+            padding: 1rem 0;
+        }
+        .pillar-grid > div {
+            --pillar-accent: #2563eb;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            background: #fff;
+            box-shadow: 0 7px 16px rgba(24, 39, 58, .08);
+            padding: 1rem;
+            counter-increment: pillar-card;
+            transition: transform .2s, border-color .2s, box-shadow .2s;
+        }
+        .pillar-grid.scroll-interactive > div {
+            opacity: var(--pillar-opacity, 1);
+            transform: translateY(var(--pillar-offset, 0px)) scale(var(--pillar-scale, 1));
+            transition: border-color .2s, background-color .2s, box-shadow .2s;
+        }
+        .pillar-grid > div:hover {
+            transform: translateY(-3px);
+            border-color: var(--pillar-accent);
+            background: #f8fafc;
+            box-shadow: 0 12px 22px rgba(24, 39, 58, .12);
+        }
+        .pillar-grid {
+            counter-reset: pillar-card;
+        }
+        .pillar-grid > div > div:first-child {
+            display: grid;
+            grid-template-columns: 3.25rem minmax(0, 1fr);
+            column-gap: .8rem;
+            align-items: center;
+        }
+        .pillar-grid > div > div:first-child > .pillar-icon {
+            display: flex;
+            width: 3.25rem;
+            height: 3.25rem;
+            flex: 0 0 3.25rem;
+            grid-column: 1;
+            grid-row: 1 / span 2;
+            margin-bottom: 0;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dbeafe;
+            border-radius: .8rem;
+            background: #eff6ff;
+            color: var(--pillar-accent);
+            box-shadow: 0 3px 8px rgba(24, 39, 58, .07);
+            font-size: 1rem;
+            transition: transform .2s, background-color .2s, box-shadow .2s;
+        }
+        .pillar-grid > div:hover > div:first-child > .pillar-icon {
+            transform: translateY(-1px) scale(1.04);
+            background: #eff6ff;
+        }
+        .pillar-grid > div h3 {
+            grid-column: 2;
+            margin-bottom: .4rem;
+            color: var(--pillar-accent);
+            font-size: .8rem;
+            line-height: 1.3;
+        }
+        .pillar-grid > div h3::before {
+            display: block;
+            margin-bottom: .28rem;
+            color: var(--pillar-accent);
+            content: "PILAR " counter(pillar-card, upper-roman);
+            font-size: .55rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+        }
+        .pillar-grid > div p {
+            grid-column: 2;
+            color: #4b5d72;
+            font-size: .65rem;
+            line-height: 1.55;
+        }
+        .pillar-grid > div > a {
+            margin-top: .75rem;
+            border-color: rgba(91, 105, 122, .2);
+            padding-top: .65rem;
+            color: #526477;
+        }
+        .pillar-grid > div > a:hover {
+            color: var(--pillar-accent);
+        }
+        .category-section {
+            padding-top: 3.5rem;
+            padding-bottom: 3.5rem;
+        }
+        .category-section .category-shell {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #294b6a;
+            border-radius: 1.75rem;
+            background:
+                radial-gradient(ellipse at 92% 0%, rgba(8, 145, 178, .22), transparent 38%),
+                linear-gradient(135deg, #102a46 0%, #0d223b 58%, #102d49 100%);
+            box-shadow: 0 22px 48px rgba(9, 27, 46, .2);
+        }
+        .category-shell::before,
+        .category-shell::after {
+            position: absolute;
+            right: -4rem;
+            top: -8rem;
+            width: 18rem;
+            height: 18rem;
+            border: 1px solid rgba(125, 211, 252, .1);
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+        .category-shell::after {
+            right: -1rem;
+            top: -5rem;
+            width: 12rem;
+            height: 12rem;
+            border-color: rgba(125, 211, 252, .08);
+        }
+        .category-shell > * {
+            position: relative;
+            z-index: 1;
+        }
+        .category-shell h2 {
+            color: #f1f7fd;
+            letter-spacing: -.025em;
+        }
+        .category-shell .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            justify-content: stretch;
+            max-width: none;
+        }
+        .category-grid > a {
+            min-width: 0;
+            justify-content: flex-start;
+            border: 1px solid #34536f;
+            border-radius: 1rem;
+            background: linear-gradient(145deg, rgba(29, 58, 85, .96), rgba(20, 45, 70, .96));
+            padding: .8rem 1rem;
+            box-shadow: 0 6px 14px rgba(3, 14, 27, .12);
+            transition: border-color .2s, background-color .2s, transform .2s, box-shadow .2s;
+        }
+        .category-grid > a:hover {
+            border-color: #55c4d2;
+            background: linear-gradient(145deg, #245271, #1b4662);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(2, 12, 24, .24);
+        }
+        .category-grid > a:focus-visible {
+            outline: 3px solid #67e8f9;
+            outline-offset: 2px;
+        }
+        .category-grid > a > span {
+            flex: 0 0 2.25rem;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: .75rem;
+            border: 1px solid rgba(255, 255, 255, .14);
+            background: rgba(148, 193, 230, .16);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+        }
+        .category-grid > a h3 {
+            color: #e8f2fb;
+            font-size: .75rem;
+        }
+        .category-grid > a > i {
+            margin-left: auto;
+            color: #91abc2;
+        }
+        .category-grid > a:hover > i {
+            color: #b9f5fa;
+        }
+        .producer-section {
+            background: #e7eef7;
+        }
+        .catalog-slider-track {
+            display: flex;
+            gap: 1.25rem;
+            overflow-x: auto;
+            overscroll-behavior-x: contain;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            padding: .25rem 0 1rem;
+        }
+        .catalog-slider-track.is-autoplaying {
+            scroll-snap-type: none;
+            scroll-behavior: auto !important;
+        }
+        .catalog-slider-track::-webkit-scrollbar {
+            display: none;
+        }
+        .catalog-slider-track > article {
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 88%;
+            min-width: 0;
+            scroll-snap-align: start;
+        }
+        .catalog-slider-track > article > div:last-child {
+            flex: 1 0 auto;
+            min-height: 15rem;
+        }
+        .catalog-slider-track > article > div:last-child > a {
+            width: 5.25rem;
+            min-height: 2rem;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .catalog-slider-frame {
+            padding: 0 3rem;
+        }
+        .catalog-slider-controls {
+            position: absolute;
+            top: 50%;
+            right: .5rem;
+            left: .5rem;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .catalog-slider-controls .featured-news-nav {
+            border-color: transparent;
+            background: transparent;
+            color: #1d4ed8;
+            box-shadow: none;
+            pointer-events: auto;
+        }
+        .catalog-slider-controls .featured-news-nav:hover {
+            border-color: transparent;
+            background: rgba(255, 255, 255, .72);
+        }
+        .catalog-slider-controls button:disabled {
+            cursor: not-allowed;
+            opacity: .4;
+        }
+        .catalog-slider-track:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 3px;
+        }
+        @media (min-width: 640px) {
+            .catalog-slider-track > article {
+                flex-basis: calc((100% - 1.25rem) / 2);
+            }
+        }
+        @media (min-width: 1280px) {
+            .catalog-slider-track > article {
+                flex-basis: calc((100% - 3.75rem) / 4);
+            }
+        }
+        @media (max-width: 639px) {
+            .catalog-slider-frame {
+                padding-right: 2.5rem;
+                padding-left: 2.5rem;
+            }
+            .catalog-slider-controls {
+                right: 0;
+                left: 0;
+            }
+        }
+        .featured-news {
+            width: 100%;
+            max-width: 36rem;
+        }
+        .featured-news-viewport {
+            background: #fff;
+        }
+        .featured-news-track {
+            transition: transform .55s cubic-bezier(.22, .68, 0, 1);
+        }
+        .featured-news-slide {
+            width: 100%;
+        }
+        .featured-news-dot {
+            width: .55rem;
+            height: .55rem;
+            border-radius: 9999px;
+            background: #cbd5e1;
+            transition: width .25s, background-color .25s;
+        }
+        .featured-news-dot.is-active {
+            width: 1.5rem;
+            background: #2563eb;
+        }
+        .featured-news-dot:focus-visible,
+        .featured-news-nav:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 3px;
+        }
+        .featured-news-nav {
+            display: inline-flex;
+            width: 2.25rem;
+            height: 2.25rem;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #dbe3ee;
+            border-radius: 9999px;
+            background: #fff;
+            color: #334155;
+            transition: border-color .2s, color .2s, background-color .2s;
+        }
+        .featured-news-nav:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .featured-news-track,
+            .featured-news-dot {
+                transition: none;
+            }
+        }
+        .producer-grid > a > article {
+            min-height: 230px;
+            border: 1px solid #d9e3ee;
+            border-radius: 1.25rem;
+            background: #fff;
+            box-shadow: 0 16px 28px rgba(17, 43, 73, .2), 0 4px 9px rgba(30, 64, 175, .12);
+        }
+        .producer-grid > a:hover > article,
+        .producer-grid > a:focus-visible > article {
+            border-color: #9abce7;
+            box-shadow: 0 24px 42px rgba(17, 43, 73, .28), 0 6px 14px rgba(30, 64, 175, .18);
+        }
+        .producer-grid > a > article > div:first-child {
+            margin-top: .35rem;
+        }
+        .producer-grid > a > article > div:first-child > p:first-child {
+            color: #123b69;
+            font-size: 4.25rem;
+        }
+        .producer-grid > a > article > div:last-child {
+            border-color: #e7edf4;
+        }
+        .producer-grid.reveal-on-scroll > a {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .6s ease, transform .6s ease;
+        }
+        .producer-grid.reveal-on-scroll > a:nth-child(2) {
+            transition-delay: .08s;
+        }
+        .producer-grid.reveal-on-scroll > a:nth-child(3) {
+            transition-delay: .16s;
+        }
+        .producer-grid.reveal-on-scroll > a:nth-child(4) {
+            transition-delay: .24s;
+        }
+        .producer-grid.reveal-on-scroll > a:nth-child(5) {
+            transition-delay: .32s;
+        }
+        .producer-grid.reveal-on-scroll.is-visible > a {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .producer-grid.reveal-on-scroll > a {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+        #katalog-data {
+            background: #f3f6fa;
+        }
+        .data-summary-section {
+            color: #fff;
+            background:
+                radial-gradient(ellipse at 86% 45%, rgba(80, 160, 226, .2), transparent 34%),
+                linear-gradient(135deg, #0d2f55 0%, #124b7e 55%, #176bb0 100%);
+        }
+        .data-summary-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.75rem;
+        }
+        .data-summary-heading {
+            max-width: 38rem;
+            text-align: left;
+        }
+        .data-summary-heading > p:first-child {
+            color: #9bcfff;
+        }
+        .data-summary-heading h2 {
+            max-width: 34rem;
+        }
+        .data-summary-heading > p:nth-of-type(2) {
+            max-width: 34rem;
+            color: #d1e4f6;
+        }
+        .data-summary-heading > p:nth-of-type(2) span {
+            color: #fff;
+        }
+        .data-summary-heading > div {
+            border: 0;
+            background: transparent;
+        }
+        .data-summary-heading > div > span:first-child {
+            background: rgba(255, 255, 255, .12);
+            color: #bfdbfe;
+        }
+        .data-summary-heading > div > span:last-child {
+            color: #d1e4f6;
+        }
+        .data-summary-secondary {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .75rem;
+        }
+        .data-summary-secondary > a {
+            display: flex;
+            min-height: 7rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(191, 219, 254, .22);
+            border-radius: 1rem;
+            background: rgba(4, 29, 57, .22);
+            padding: 1rem;
+            text-align: center;
+            transition: background-color .2s, border-color .2s, transform .2s;
+        }
+        .data-summary-number {
+            display: flex;
+            min-height: 3.5rem;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            color: #fff;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -.07em;
+            line-height: 1;
+        }
+        .data-summary-number span {
+            color: #bfdbfe;
+            font-size: .75rem;
+            font-weight: 600;
+            letter-spacing: 0;
+        }
+        .data-summary-secondary .data-summary-number {
+            min-height: 2.25rem;
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+        }
+        .data-summary-caption {
+            display: flex;
+            min-height: 1.25rem;
+            align-items: center;
+            justify-content: center;
+            margin-top: .35rem;
+            color: #d1e4f6;
+            font-size: .8rem;
+            line-height: 1.4;
+        }
+        .data-summary-secondary > a:hover {
+            transform: translateY(-2px);
+            border-color: rgba(191, 219, 254, .46);
+            background: rgba(255, 255, 255, .1);
+        }
+        .data-summary-secondary > a:focus-visible {
+            position: relative;
+            z-index: 1;
+            outline: 2px solid #bfdbfe;
+            outline-offset: -3px;
+        }
+        @media (max-width: 767px) {
+            .data-summary-secondary > a:nth-child(3) {
+                grid-column: 1 / -1;
+                flex-direction: row;
+                gap: 1rem;
+            }
+        }
+        .data-summary-primary {
+            display: flex;
+            min-height: 9rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            border: 1px solid rgba(191, 219, 254, .28);
+            border-radius: 1.25rem;
+            background: linear-gradient(110deg, rgba(37, 99, 174, .72), rgba(31, 111, 183, .44));
+            padding: 1.35rem 1.5rem;
+            box-shadow: 0 16px 34px rgba(3, 24, 48, .16);
+            transition: border-color .2s, transform .2s, background-color .2s;
+        }
+        .data-summary-primary:hover {
+            transform: translateY(-2px);
+            border-color: rgba(219, 234, 254, .65);
+        }
+        .data-summary-primary:focus-visible {
+            outline: 2px solid #bfdbfe;
+            outline-offset: 3px;
+        }
+        .data-summary-primary .data-summary-number {
+            min-height: 0;
+            justify-content: flex-start;
+            font-size: clamp(3.5rem, 7vw, 5rem);
+        }
+        .data-summary-primary .data-summary-caption {
+            justify-content: flex-start;
+            margin-top: .15rem;
+            font-size: .875rem;
+        }
+        .data-summary-primary-copy {
+            max-width: 13rem;
+            color: #dbeafe;
+            font-size: .8rem;
+            line-height: 1.55;
+        }
+        @media (min-width: 768px) {
+            .data-summary-grid {
+                grid-template-columns: minmax(0, 1.1fr) minmax(19rem, .9fr);
+                grid-template-areas:
+                    "heading secondary"
+                    "primary secondary";
+                align-items: stretch;
+                gap: 1.25rem 3rem;
+            }
+            .data-summary-heading { grid-area: heading; }
+            .data-summary-primary { grid-area: primary; }
+            .data-summary-secondary {
+                grid-area: secondary;
+                grid-template-columns: minmax(0, 1fr);
+                align-content: center;
+                gap: .75rem;
+                border-left: 1px solid rgba(191, 219, 254, .25);
+                padding-left: 2rem;
+            }
+            .data-summary-secondary > a {
+                min-height: 6rem;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 1rem;
+                padding: .85rem 1rem;
+                text-align: left;
+            }
+            .data-summary-secondary .data-summary-number {
+                width: 4.5rem;
+                flex: 0 0 4.5rem;
+                justify-content: flex-start;
+                font-size: 2.25rem;
+            }
+            .data-summary-secondary .data-summary-caption {
+                min-height: 0;
+                justify-content: flex-start;
+                margin: 0;
+                font-size: .9rem;
+            }
+        }
+        @media (min-width: 768px) {
+            .category-shell .category-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 1023px) {
+            .hero-intro {
+                margin-bottom: 2rem;
+            }
+            .hero-principles {
+                position: static;
+                display: flex;
+                height: auto;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: .75rem;
+                margin-top: 1.5rem;
+            }
+            .hero-principle,
+            .hero-principle:nth-child(1),
+            .hero-principle:nth-child(2),
+            .hero-principle:nth-child(3),
+            .hero-principle:nth-child(4) {
+                position: relative;
+                inset: auto;
+            }
+            .hero-principles::before {
+                position: absolute;
+                top: 50%;
+                left: -17rem;
+                width: 25rem;
+                height: 17rem;
+                border: 1px dashed rgba(104, 182, 235, .62);
+                border-radius: 50%;
+                content: "";
+                pointer-events: none;
+                transform: translateY(-50%) rotate(-18deg);
+            }
+            .hero-principle .hero-principle-tooltip,
+            .hero-principle:nth-child(even) .hero-principle-tooltip {
+                position: fixed;
+                top: 50%;
+                right: auto;
+                bottom: auto;
+                left: 50%;
+                width: min(20rem, calc(100vw - 2rem));
+                max-height: calc(100svh - 2rem);
+                transform: translate(-50%, -50%);
+                transition: opacity .2s;
+            }
+            .hero-principle::after {
+                display: none;
+            }
+            .hero-principle:hover .hero-principle-tooltip,
+            .hero-principle:focus-within .hero-principle-tooltip,
+            .hero-principle:nth-child(even):hover .hero-principle-tooltip,
+            .hero-principle:nth-child(even):focus-within .hero-principle-tooltip {
+                visibility: visible;
+            }
+            .hero-principle .hero-principle-tooltip {
+                right: auto;
+            }
+        }
+        @media (max-width: 640px) {
+            .hero-bg {
+                min-height: 100svh;
+                padding: 6.5rem 1rem 3rem;
+            }
+            .hero-title {
+                font-size: clamp(2.8rem, 12vw, 4rem);
+            }
+            .hero-intro > div:first-child {
+                font-size: 8px;
+                line-height: 1.5;
+            }
+            .hero-principle button {
+                min-width: auto;
+                min-height: 2.8rem;
+                padding: .5rem .65rem;
+            }
+            .hero-principle button strong {
+                font-size: .6rem;
+            }
+            .hero-content > .hero-copy > div:nth-child(2) {
+                padding: .65rem;
+            }
+            #hero-dataset-search {
+                padding-right: 6.5rem;
+            }
+            .hero-copy > div:last-child > div:last-child {
+                font-size: 10px;
+            }
+            .category-section {
+                padding-top: 2.5rem;
+                padding-bottom: 2.5rem;
+            }
+        }
+        .site-header {
+            background: rgba(8, 24, 40, .94);
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            box-shadow: 0 8px 26px rgba(2, 12, 24, .24);
+        }
+        .site-header > div {
+            height: 64px;
+        }
+        .site-header > div > div:first-child span:first-child {
+            font-size: 1.2rem;
+        }
+        .site-header nav a,
+        .site-header .geo-menu-toggle {
+            color: #e6edf5;
+        }
+        .site-header nav a:hover,
+        .site-header .geo-menu-toggle:hover {
+            color: #75b9ed;
+        }
+        .site-header > div > div:first-child > div {
+            position: static;
+            padding-left: 0;
+        }
+        .site-header .geo-menu-toggle {
+            position: relative;
+        }
+        .site-header nav > a:first-child {
+            position: relative;
+            color: #fff;
+        }
+        .site-header nav > a:first-child::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            bottom: -.95rem;
+            left: 0;
+            height: 3px;
+            border-radius: 4px;
+            background: #3188c8;
+        }
+        .site-header .social-link {
+            background: rgba(255,255,255,.08);
+            color: #e6edf5;
+        }
+        .site-header .social-link:hover {
+            background: #2879bd;
+            color: #fff;
+        }
+        .site-header .social-link[aria-label="Layanan bantuan"] {
+            display: none;
+        }
+        .hero-bg {
+            height: min(77svh, 760px);
+            min-height: 560px;
+            justify-content: flex-start;
+            padding: 5rem 1.5rem 4rem;
+            background:
+                linear-gradient(90deg, rgba(4, 20, 40, .78) 0%, rgba(5, 28, 51, .44) 38%, rgba(8, 31, 53, .12) 72%, rgba(8, 31, 53, .18) 100%),
+                linear-gradient(115deg, rgba(12, 49, 84, .3), rgba(20, 83, 132, .16)),
+                linear-gradient(0deg, rgba(6, 27, 44, .26) 0%, transparent 46%),
+                url("assets/hero-scenic-bg.png") center 48% / cover no-repeat,
+                linear-gradient(115deg, #081a31 0%, #103657 52%, #0a2038 100%);
+            background-color: #0b2540;
+        }
+        .hero-bg::after {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse at 98% 73%, rgba(78, 166, 224, .2), transparent 38%);
+            content: "";
+            pointer-events: none;
+        }
+        .hero-bg::before {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+                linear-gradient(180deg, transparent 70%, rgba(7, 24, 35, .18));
+            content: "";
+            pointer-events: none;
+        }
+        .hero-content {
+            max-width: 62rem;
+            width: 100%;
+            margin: auto;
+            transform: translateY(1.25rem);
+        }
+        .hero-copy {
+            width: 100%;
+        }
+        .hero-intro {
+            display: grid;
+            grid-template-columns: minmax(0, .92fr) minmax(340px, 1.08fr);
+            grid-template-areas:
+                "kicker map"
+                "eyebrow map"
+                "title map"
+                "description map";
+            align-items: center;
+            column-gap: 2.5rem;
+            max-width: 62rem;
+            min-height: 275px;
+            margin: 0 auto 2rem;
+            text-align: left;
+        }
+        .hero-intro > div:first-child {
+            grid-area: kicker;
+            position: relative;
+            z-index: 2;
+            justify-self: start;
+            margin: 0 0 1rem;
+            border-color: rgba(104, 182, 235, .72);
+            background: rgba(30, 42, 52, .48);
+            color: #c9e8ff;
+            box-shadow: none;
+        }
+        .hero-intro > p:first-of-type {
+            grid-area: eyebrow;
+            position: relative;
+            z-index: 2;
+            max-width: 20rem;
+            margin: 0 0 .45rem;
+            color: #8bc7f4;
+            line-height: 1.55;
+            letter-spacing: .22em;
+        }
+        .hero-title {
+            grid-area: title;
+            position: relative;
+            z-index: 2;
+            margin: 0 0 .75rem;
+            font-size: clamp(3.2rem, 6vw, 4.65rem);
+            line-height: .98;
+            letter-spacing: -.075em;
+            text-transform: none;
+            text-align: left;
+        }
+        .hero-title .hero-brand-accent {
+            position: relative;
+            display: inline-block;
+            margin-left: -.08em;
+            color: #56a8e8;
+        }
+        .hero-title .hero-brand-accent::after {
+            position: absolute;
+            right: .12em;
+            bottom: -.14em;
+            left: .08em;
+            height: .16em;
+            border-bottom: .07em solid #a9d8fa;
+            border-radius: 50%;
+            content: "";
+            transform: rotate(-4deg);
+        }
+        .hero-intro > p:nth-of-type(2) {
+            grid-area: description;
+            position: relative;
+            z-index: 2;
+            max-width: 31rem;
+            margin: 0;
+            color: #e5edf5;
+            text-align: left;
+        }
+        .hero-intro::before,
+        .hero-intro::after {
+            content: "";
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .hero-intro::before {
+            top: 24%;
+            right: 19%;
+            width: 42%;
+            height: 62%;
+            border-radius: 50%;
+            background: radial-gradient(ellipse, rgba(78, 166, 224, .2), rgba(83, 171, 197, .1) 46%, transparent 72%);
+            filter: blur(7px);
+        }
+        .hero-intro::after {
+            top: -8%;
+            right: 7%;
+            width: 57%;
+            height: 138%;
+            background: url("assets/hero-map-hd.png") center / contain no-repeat;
+            filter: drop-shadow(0 20px 30px rgba(5, 17, 26, .42));
+        }
+        .hero-principles {
+            grid-area: map;
+            position: relative;
+            z-index: 2;
+            inset: auto;
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            gap: .75rem;
+            padding-right: .25rem;
+            transform: translateX(2.5rem);
+        }
+        .hero-principle,
+        .hero-principle:nth-child(1),
+        .hero-principle:nth-child(2),
+        .hero-principle:nth-child(3),
+        .hero-principle:nth-child(4) {
+            position: relative;
+            inset: auto;
+        }
+        .hero-principle button {
+            min-width: 10rem;
+            min-height: 3.6rem;
+            border: 1px solid rgba(151, 196, 230, .44);
+            border-radius: 1.25rem;
+            background: rgba(21, 39, 54, .62);
+            backdrop-filter: blur(7px);
+            box-shadow: 0 8px 22px rgba(0,0,0,.15);
+        }
+        .hero-principle button::before {
+            display: none;
+        }
+        .hero-principle button > i {
+            width: 1.6rem;
+            flex: 0 0 1.6rem;
+            color: #75b9ed;
+            font-size: 1.25rem;
+            text-align: center;
+            filter: drop-shadow(0 0 6px rgba(84,166,224,.4));
+        }
+        .hero-principle-tooltip {
+            top: 50%;
+            right: calc(100% + .75rem);
+            left: auto;
+            transform: translateY(-50%);
+        }
+        .hero-copy > div:last-child {
+            position: relative;
+            z-index: 3;
+            max-width: 40rem;
+            top: 1.75rem;
+            margin-right: auto;
+            margin-left: auto;
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+        }
+        .hero-copy > div:last-child > div:first-of-type {
+            overflow: hidden;
+            border: 1px solid rgba(191, 216, 238, .8);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .97);
+            box-shadow: 0 12px 30px rgba(5, 19, 32, .22);
+        }
+        .hero-copy > div:last-child > div:first-of-type i {
+            color: #536f89;
+        }
+        #hero-dataset-search {
+            min-height: 2.9rem;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            padding-right: 11rem;
+            color: #17314b;
+        }
+        #hero-dataset-search::placeholder {
+            color: #738295;
+        }
+        .hero-copy > div:last-child > div:first-of-type a {
+            border-radius: 999px;
+            background: #2879bd;
+            padding: .65rem .95rem;
+        }
+        .hero-copy > div:last-child > div:first-of-type a:hover {
+            background: #368fce;
+        }
+        .hero-copy > div:last-child > div:last-child {
+            margin-top: .35rem;
+            padding: .1rem .5rem 0;
+            color: #d3e4f4;
+        }
+        .hero-copy > div:last-child > div:last-child a {
+            border-color: rgba(255, 255, 255, .3);
+            border-radius: 999px;
+            background: rgba(17, 39, 57, .48);
+        }
+        .hero-copy > div:last-child > div:last-child a:hover {
+            border-color: #73b9ee;
+            color: #fff;
+        }
+        main.relative.z-20 {
+            margin-top: -1.5rem;
+            padding-top: 3.5rem;
+            isolation: isolate;
+            background: transparent;
+        }
+        main.relative.z-20::before {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background-color: #f5f9fd;
+            clip-path: polygon(0 1.1rem, 100% 1.1rem, 100% 100%, 0 100%);
+            content: "";
+            pointer-events: none;
+        }
+        .pillar-section {
+            background: transparent;
+        }
+        .pillar-grid > div {
+            box-shadow: 0 12px 26px rgba(44, 37, 29, .08);
+        }
+        .quick-access {
+            position: relative;
+            z-index: 25;
+            margin: 0 auto 2rem;
+            max-width: 68rem;
+            padding: 0 1.5rem;
+        }
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+        }
+        .quick-access-grid > a {
+            display: flex;
+            min-width: 0;
+            min-height: 5rem;
+            align-items: center;
+            gap: .7rem;
+            border: 1px solid rgba(201, 220, 237, .95);
+            border-radius: 1.25rem;
+            background: rgba(255, 255, 255, .97);
+            padding: .5rem .8rem;
+            color: #172f49;
+            box-shadow: 0 12px 24px rgba(36, 76, 110, .1);
+            transition: border-color .2s, transform .2s, box-shadow .2s;
+        }
+        .quick-access-grid > a:hover {
+            transform: translateY(-3px);
+            border-color: rgba(40, 121, 189, .48);
+            box-shadow: 0 16px 30px rgba(36, 76, 110, .14);
+        }
+        .quick-access-icon {
+            display: flex;
+            width: 3.5rem;
+            height: 3.5rem;
+            flex: 0 0 3.5rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e8f3fc;
+            color: #2879bd;
+            font-size: 1.3rem;
+        }
+        .quick-access-label {
+            flex: 1;
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            font-size: .9rem;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+        .quick-access-label small {
+            margin-top: .2rem;
+            color: #53667a;
+            font-size: .68rem;
+            font-weight: 500;
+            line-height: 1.35;
+        }
+        .quick-access-arrow {
+            display: flex;
+            width: 1.65rem;
+            height: 1.65rem;
+            flex: 0 0 1.65rem;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #dcecf9;
+            color: #246797;
+            font-size: .7rem;
+        }
+        @media (max-width: 900px) {
+            .hero-bg {
+                height: auto;
+                min-height: 0;
+                padding: 7rem 1.25rem 5rem;
+            }
+            .hero-content {
+                transform: none;
+            }
+            .hero-intro {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-areas:
+                    "kicker"
+                    "eyebrow"
+                    "title"
+                    "description"
+                    "map";
+                row-gap: .3rem;
+                min-height: 0;
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+            .hero-intro > div:first-child {
+                justify-self: center;
+            }
+            .hero-title,
+            .hero-intro > p:nth-of-type(2) {
+                text-align: center;
+                justify-self: center;
+            }
+            .hero-intro::before,
+            .hero-intro::after {
+                top: auto;
+                right: 18%;
+                bottom: 2%;
+                width: 64%;
+                height: 40%;
+            }
+            .hero-intro::before {
+                right: 16%;
+                bottom: -2%;
+            }
+            .hero-intro::after {
+                right: 10%;
+                bottom: 10%;
+                width: 80%;
+                height: 52%;
+            }
+            .hero-principles {
+                min-height: 14rem;
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-end;
+                justify-content: center;
+                gap: .5rem;
+                margin-top: 1rem;
+                padding: 3.5rem 0 0;
+            }
+            .hero-principles::before {
+                display: none;
+            }
+            .hero-principle button {
+                min-width: 7.3rem;
+            }
+            .hero-copy > div:last-child {
+                border-radius: 1.5rem;
+            }
+            .quick-access {
+                padding: 0 1.25rem;
+            }
+            .quick-access-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        @media (max-width: 640px) {
+            .site-header > div {
+                height: 68px;
+                padding-right: 1rem;
+                padding-left: 1rem;
+            }
+            .hero-bg {
+                height: auto;
+                padding: 6rem 1rem 4rem;
+            }
+            .hero-intro {
+                margin-bottom: 1rem;
+            }
+            .hero-intro > div:first-child {
+                margin-bottom: .75rem;
+                font-size: 9px;
+            }
+            .hero-title {
+                font-size: clamp(2.7rem, 13vw, 4rem);
+            }
+            .hero-principles {
+                min-height: 16rem;
+                align-content: flex-end;
+            }
+            .hero-principle button {
+                min-width: 7.1rem;
+                min-height: 2.7rem;
+            }
+            .hero-copy > div:last-child > div:first-of-type {
+                align-items: stretch;
+            }
+            #hero-dataset-search {
+                padding-right: 10rem;
+            }
+            .hero-copy > div:last-child > div:last-child {
+                gap: .4rem;
+                font-size: 10px;
+            }
+            main.relative.z-20 {
+                border-radius: 2rem 2rem 0 0;
+                padding-top: 2.5rem;
+            }
+            .quick-access {
+                padding: 0 1rem;
+            }
+            .quick-access-grid {
+                gap: .6rem;
+            }
+            .quick-access-grid > a {
+                min-height: 4.4rem;
+                gap: .55rem;
+                border-radius: 1rem;
+                padding: .65rem;
+            }
+            .quick-access-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                flex-basis: 2.5rem;
+                font-size: 1rem;
+            }
+            .quick-access-label {
+                font-size: .75rem;
+            }
+            .quick-access-label small {
+                font-size: .62rem;
+            }
+            .quick-access-arrow {
+                display: none;
+            }
+        }
+    </style>
+    
+    
+</head>
+<body id="top" class="antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Navbar -->
+    <header class="site-header fixed top-0 left-0 right-0 z-50 backdrop-blur-md text-white">
+        <div class="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center min-w-0 gap-3">
+                <div>
+                    <span class="font-extrabold text-lg tracking-tight text-white block leading-tight">Jaring<span class="text-sky-300">Banter</span></span>
+                    <span class="text-[10px] text-slate-300 font-medium whitespace-nowrap">Satu Data Geospasial Kabupaten Bantul</span>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <a href="#top" class="transition">Beranda</a>
+                <a href="#data-summary-title" class="transition">Sedata Sebantul</a>
+                <a href="#katalog-data" class="transition">Katalog Data</a>
+                <a href="#geostory" class="transition">Infografis</a>
+                <div class="geo-dropdown relative">
+                    <button type="button" id="geo-menu-toggle" class="geo-menu-toggle transition flex items-center gap-2" aria-haspopup="true" aria-expanded="false" aria-controls="geo-menu">
+                        Tentang <i class="fa-solid fa-chevron-down text-[10px]" aria-hidden="true"></i>
+                    </button>
+                    <div id="geo-menu" class="geo-menu" aria-label="Tentang Jaring Banter" aria-hidden="true">
+                        <a href="#simpul-jaringan">Simpul Jaringan</a>
+                        <a href="#kategori-data">Kategori Data</a>
+                        <a href="#produsen-data">Produsen Data</a>
+                        <a href="#kolaborasi-dataset">Kolaborasi Dataset</a>
+                        <a href="#integrasi">Integrasi</a>
+                        <a href="#kabar-geospasial">Kabar Geospasial</a>
+                        <a href="#geostory">GeoStory</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Right Icons -->
+            <div class="flex items-center gap-2 text-slate-700">
+                <a href="#hero-dataset-search" aria-label="Cari data geospasial" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-magnifying-glass text-sm"></i></a>
+                <a href="https://www.youtube.com/c/BantulTV" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-brands fa-youtube text-sm"></i></a>
+                <a href="https://www.instagram.com/pemkabbantul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-brands fa-instagram text-base"></i></a>
+                <a href="https://bantulkab.go.id/hubungi_kami.html" target="_blank" rel="noopener noreferrer" aria-label="Layanan bantuan" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-headset text-sm"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg relative overflow-hidden flex flex-col justify-center">
+        <canvas id="globe-canvas" aria-label="Globe data geospasial interaktif, seret untuk memutar"></canvas>
+
+        <div class="hero-content relative z-10 text-white">
+            <div class="hero-copy">
+                <div class="hero-intro">
+                    <div class="mb-16 inline-flex items-center gap-2 rounded-full border border-blue-500/50 bg-blue-950/80 px-4 py-2 text-[11px] font-semibold tracking-wide text-blue-200 shadow-inner">
+                        Simpul Jaringan Informasi Geospasial Daerah Bantul
+                    </div>
+                    <p class="mb-3 text-xs font-bold uppercase tracking-[.2em] text-blue-300 md:text-sm">SATU DATA SPASIAL PEMBANGUNAN DAERAH</p>
+                    <h1 class="hero-title text-white">Jaring<span class="hero-brand-accent">Banter</span></h1>
+                    <p class="mx-auto mb-0 max-w-2xl text-sm leading-relaxed text-slate-300 md:text-base">
+                        Simpul Jaringan Geospasial Kabupaten Bantul yang <strong class="font-semibold text-white">Terencana</strong>, <strong class="font-semibold text-white">Terbuka</strong>, <strong class="font-semibold text-white">Terstandar</strong>, dan <strong class="font-semibold text-white">Terintegrasi</strong> untuk kebijakan presisi &amp; pelayanan masyarakat.
+                    </p>
+
+                    <div class="hero-principles" aria-label="Prinsip pengelolaan data">
+                        <div class="hero-principle">
+                            <button type="button" aria-describedby="principle-open-tooltip"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>PRINSIP I<strong>TERBUKA</strong></span></button>
+                            <div class="hero-principle-tooltip" id="principle-open-tooltip" role="tooltip">
+                                <h2>Terbuka</h2>
+                                <ul>
+                                    <li>Pencarian data mudah melalui Sedata Sebantul.</li>
+                                    <li>Akses data praktis dengan kategori yang terstruktur.</li>
+                                    <li>Dilengkapi metadata yang bisa diunduh.</li>
+                                    <li>Data bisa diunduh dan dibagipakaikan.</li>
+                                    <li>Terbuka untuk kolaborasi dengan berbagai pihak.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="hero-principle">
+                            <button type="button" aria-describedby="principle-planned-tooltip"><i class="fa-solid fa-bullseye" aria-hidden="true"></i><span>PRINSIP II<strong>TERENCANA</strong></span></button>
+                            <div class="hero-principle-tooltip" id="principle-planned-tooltip" role="tooltip">
+                                <h2>Terencana</h2>
+                                <ul>
+                                    <li>Dokumen Perencanaan (RPJMD, RKPD, Renstra PD).</li>
+                                    <li>Regulasi (Perbup SDI, SK Bupati Tim SDI, SK Bupati Daftar Data, SK Sekda SOP, Penyelenggara &amp; Penyelenggaraan SDI).</li>
+                                    <li>Rencana Aksi (Rencana Aksi SDI, Roadmap IG, Renstra IG).</li>
+                                    <li>Reviu dan Evaluasi dilaporkan rutin melalui Laporan Penyelenggaraan SDI.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="hero-principle">
+                            <button type="button" aria-describedby="principle-standard-tooltip"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>PRINSIP III<strong>TERSTANDAR</strong></span></button>
+                            <div class="hero-principle-tooltip" id="principle-standard-tooltip" role="tooltip">
+                                <h2>Terstandar</h2>
+                                <ul>
+                                    <li>Data Center terstandar ISO 27001:2022.</li>
+                                    <li>Metadata Spasial sesuai SNI 8843:2019 / ISO 19115.</li>
+                                    <li>DG/IG dilengkapi Katalog Unsur Geografi Indonesia.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="hero-principle">
+                            <button type="button" aria-describedby="principle-integrated-tooltip"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i><span>PRINSIP IV<strong>TERINTEGRASI</strong></span></button>
+                            <div class="hero-principle-tooltip" id="principle-integrated-tooltip" role="tooltip">
+                                <h2>Terintegrasi</h2>
+                                <ul>
+                                    <li>Regulasi Integrasi.</li>
+                                    <li>Tim Integrasi.</li>
+                                    <li>Forum Integrasi.</li>
+                                    <li>Sistem Integrasi.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mx-auto mt-12 max-w-2xl rounded-3xl border border-slate-800/90 bg-slate-950/95 p-3 text-left shadow-2xl backdrop-blur-md sm:p-4">
+                    <label for="hero-dataset-search" class="sr-only">Cari dataset geospasial</label>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 text-slate-400"></i>
+                        <input id="hero-dataset-search" type="search" aria-label="Cari dataset geospasial" placeholder="Cari data geospasial, peta, atau informasi..." class="w-full rounded-2xl border border-slate-800 bg-slate-900 py-3.5 pl-12 pr-32 text-sm text-slate-200 outline-none transition focus:border-blue-500">
+                        <a href="#katalog-data" class="absolute right-2 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-blue-500">
+                            EKSPLORASI DATA <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap items-center gap-2 px-1 text-xs text-slate-400">
+                        <span class="mr-1 text-[10px] font-medium uppercase tracking-wider text-slate-500">Tren pencarian:</span>
+                        <a href="#katalog-data" class="rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1 text-slate-300 transition hover:border-blue-500 hover:text-white">Pendidikan</a>
+                        <a href="#katalog-data" class="rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1 text-slate-300 transition hover:border-blue-500 hover:text-white">Transportasi</a>
+                        <a href="#katalog-data" class="rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1 text-slate-300 transition hover:border-blue-500 hover:text-white">Bencana</a>
+                        <a href="#katalog-data" class="rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1 text-slate-300 transition hover:border-blue-500 hover:text-white">Tata Ruang</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bagian Putih Bawah (Bisa di-scroll) -->
+    <main class="relative z-20 bg-[#f4f7fb] text-slate-800 pb-28 pt-8">
+       <!-- Bagian 5 Pilar Simpul Jaringan -->
+<section id="simpul-jaringan" class="pillar-section geo-menu-target">
+<div class="max-w-7xl mx-auto px-4 py-12 relative">
+    <div class="pillar-shell rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_45px_rgba(15,23,42,0.06)] p-6 md:p-8">
+
+    <!-- Header Section (Tanpa Tombol Panah) -->
+    <div class="mb-8 text-center">
+        <h2 class="text-xl md:text-2xl font-bold text-slate-900 mb-2">Simpul Jaringan Informasi Geospasial Kabupaten Bantul</h2>
+        <p class="text-[11px] md:text-sm uppercase tracking-[0.12em] text-slate-600 font-bold max-w-xl mx-auto leading-relaxed">
+            LIMA PILAR UTAMA YANG MENJADI FONDASI PENGELOLAAN INFORMASI GEOSPASIAL KABUPATEN BANTUL.
+        </p>
+    </div>
+
+    <!-- Lima kartu tampil statis dan membungkus sesuai lebar layar -->
+    <div class="pillar-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        
+        <!-- PILAR 1: KEBIJAKAN -->
+        <div class="rounded-xl p-5 border border-slate-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-blue-500 group flex flex-col justify-between">
+          <div>
+            <div class="pillar-icon">
+                <svg aria-hidden="true" viewBox="0 0 48 48" class="h-12 w-12">
+                    <path d="M7 5h23a3 3 0 0 1 3 3v18M11 11h17M11 16h14M11 21h10M7 27v-4M7 23a3 3 0 0 1 3-3h8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4"/>
+                    <path d="m22 27 4-4 13 13-4 4-13-13Zm-2 2 4-4 5 5-4 4-5-5Zm15 9 4-4 3 3-4 4-3-3ZM23 29 10 42" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+                    <path d="m8 42 4-4 3 3-4 4H8v-3Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2.2"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors">Kebijakan</h3>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+                Kebijakan Penyelenggaraan Informasi Geospasial di Kabupaten Bantul
+            </p>
+          </div>
+          <a href="simpul-jaringan.html#pilar-kebijakan" aria-label="Lihat detail pilar Kebijakan" class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
+              <span>Detail</span>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+          </a>
+        </div>
+
+        <!-- PILAR 2: KELEMBAGAAN -->
+        <div class="rounded-xl p-5 border border-slate-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-blue-500 group flex flex-col justify-between">
+          <div>
+            <div class="pillar-icon">
+                <svg aria-hidden="true" viewBox="0 0 48 48" class="h-12 w-12">
+                    <circle cx="24" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="M17 20a7 7 0 0 1 14 0v2H17v-2ZM6 39v-3a5 5 0 0 1 10 0v3H6Zm26 0v-3a5 5 0 0 1 10 0v3H32Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    <circle cx="11" cy="28" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="37" cy="28" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="M24 14v7M11 31v3m26-3v3M16 23h4m8 0h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/>
+                    <circle cx="24" cy="29" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="m24 25 .9 2.5 2.6.1-2 1.6.7 2.5-2.2-1.4-2.2 1.4.7-2.5-2-1.6 2.6-.1L24 25Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.2"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors">Kelembagaan</h3>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+                Kelembagaan Penyelenggaraan Informasi Geospasial di Kabupaten Bantul
+            </p>
+          </div>
+          <a href="simpul-jaringan.html#pilar-kelembagaan" aria-label="Lihat detail pilar Kelembagaan" class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
+              <span>Detail</span>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+          </a>
+        </div>
+
+        <!-- PILAR 3: TEKNOLOGI -->
+        <div class="rounded-xl p-5 border border-slate-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-blue-500 group flex flex-col justify-between">
+          <div>
+            <div class="pillar-icon">
+                <svg aria-hidden="true" viewBox="0 0 48 48" class="h-12 w-12">
+                    <rect x="3" y="7" width="32" height="25" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="M7 12h24M7 16h8m-8 4h10m-10 4h8M14 32v5m10-5v5M9 38h20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/>
+                    <path d="m20 24 4-5 4 3 4-6 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                    <circle cx="39" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="m39 6 1 2m5 1-2 1m2 5-2-1m-4 6 1-2m-7-1 2-1m-2-5 2 1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/>
+                    <circle cx="39" cy="29" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="m39 22 1 2m5 1-2 1m2 5-2-1m-4 6 1-2m-7-1 2-1m-2-5 2 1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors">Teknologi</h3>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+                Teknologi Penyelenggaraan Informasi Geospasial di Kabupaten Bantul
+            </p>
+          </div>
+          <a href="simpul-jaringan.html#pilar-teknologi" aria-label="Lihat detail pilar Teknologi" class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
+              <span>Detail</span>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+          </a>
+        </div>
+
+        <!-- PILAR 4: STANDAR DATA & IG -->
+        <div class="rounded-xl p-5 border border-slate-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-blue-500 group flex flex-col justify-between">
+          <div>
+            <div class="pillar-icon">
+                <svg aria-hidden="true" viewBox="0 0 48 48" class="h-12 w-12">
+                    <path d="M10 6h23l5 5v25H10a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2"/>
+                    <path d="M16 13h15m-15 6 2 2 3-4m3 2h7m-17 6 2 2 3-4m3 2h7m-17 6 2 2 3-4m3 2h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                    <circle cx="35" cy="34" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="m32 34 2 2 4-5m-3-8v3m0 16v3m8-8h-3m-10 0h-3m13-6-2 2m-9 9-2 2m0-13 2 2m9 9 2 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors">Standar Data</h3>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+                Standar Data dan Informasi Geospasial di Kabupaten Bantul
+            </p>
+          </div>
+          <a href="simpul-jaringan.html#pilar-standar" aria-label="Lihat detail pilar Standar Data" class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
+              <span>Detail</span>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+          </a>
+        </div>
+
+        <!-- PILAR 5: SDM -->
+        <div class="rounded-xl p-5 border border-slate-100 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-blue-500 group flex flex-col justify-between">
+          <div>
+            <div class="pillar-icon">
+                <svg aria-hidden="true" viewBox="0 0 48 48" class="h-12 w-12">
+                    <path d="M11 44a19 19 0 0 1 1-23l-2-5 6 1a18 18 0 0 1 25 16v11H11Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                    <circle cx="26" cy="23" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="M14 44v-3a12 12 0 0 1 24 0v3M26 12V8m-3 0h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/>
+                    <circle cx="38" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="m38 4 .8 2.2 2.3.1-1.8 1.4.6 2.3-1.9-1.3-1.9 1.3.6-2.3-1.8-1.4 2.3-.1L38 4Zm-1 19 .7 2 2.1.1-1.6 1.3.6 2-1.8-1.1-1.7 1.1.6-2-1.7-1.3 2.1-.1.7-2Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3"/>
+                </svg>
+            </div>
+            <h3 class="font-bold text-slate-900 text-sm mb-1.5 group-hover:text-blue-600 transition-colors">Sumber Daya Manusia</h3>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+                Sumber Daya Manusia dalam Penyelenggaraan Informasi Geospasial
+            </p>
+          </div>
+          <a href="simpul-jaringan.html#pilar-sdm" aria-label="Lihat detail pilar Sumber Daya Manusia" class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] font-semibold text-slate-400 group-hover:text-blue-600 transition-colors">
+              <span>Detail</span>
+              <i class="fa-solid fa-arrow-right transition-transform duration-300 group-hover:translate-x-1"></i>
+          </a>
+        </div>
+
+    </div>
+    </div>
+</div>
+</section>
+
+
+<!-- ========================================== -->
+<!-- TAMBAHAN: Bagian Akses Data Berdasarkan Kategori (Versi 2 - Pill / Chips Minimalis) -->
+<!-- ========================================== -->
+<div id="kategori-data" class="category-section geo-menu-target max-w-7xl mx-auto px-4 py-16">
+    <div class="category-shell rounded-[28px] border border-slate-200 bg-slate-100/90 p-6 shadow-[0_18px_45px_rgba(15,23,42,0.06)] md:p-8">
+    
+    <!-- Header Section -->
+    <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-3">
+            Akses data lebih praktis dengan kategori yang terstruktur
+        </h2>
+    </div>
+
+    <!-- Chips / Pill Container (Flex Wrap Center) -->
+    <div class="category-grid flex flex-wrap items-center justify-center gap-3 max-w-5xl mx-auto">
+        
+        <!-- 1. Batas Wilayah -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🌍</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Batas Wilayah</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 2. Utilitas -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🏗️</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Utilitas</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 3. Pendidikan -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🎓</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Pendidikan</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 4. Kesehatan -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🏥</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Kesehatan</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 5. Sosial & Ekonomi -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">💰</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Sosial &amp; Ekonomi</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 6. Pariwisata & Budaya -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🏝️</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Pariwisata &amp; Budaya</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 7. Kebencanaan -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🌋</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Kebencanaan</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 8. Vegetasi -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🌳</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Vegetasi</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+        <!-- 9. Lainnya -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="group flex items-center gap-3 bg-slate-900/80 hover:bg-blue-600 border border-slate-700/80 hover:border-blue-500 px-5 py-3 rounded-full backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-blue-500/20">
+            <span class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-base group-hover:bg-white/20 transition-colors">🗂️</span>
+            <div class="text-left">
+                <h3 class="text-xs font-bold text-white tracking-wide">Lainnya</h3>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-500 group-hover:text-white ml-2 transition-transform group-hover:translate-x-0.5"></i>
+        </a>
+
+    </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- TOP 5 PRODUSEN DATA GEOSPASIAL (Light Mode) -->
+<!-- ========================================== -->
+<section id="produsen-data" class="producer-section geo-menu-target">
+<div class="max-w-7xl mx-auto px-4 py-12">
+    
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mb-2">
+                Top 5 Produsen Data Geospasial Kabupaten Bantul
+            </h2>
+            <p class="text-xs md:text-sm text-slate-700 max-w-2xl leading-relaxed">
+                Lima produsen dengan jumlah dataset geospasial terbanyak di Kabupaten Bantul.
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" class="inline-flex items-center px-5 py-3 rounded-xl bg-white hover:bg-blue-50 text-slate-900 text-xs font-bold transition-all shadow-md">
+                LIHAT PRODUSEN DATA <i class="fa-solid fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Grid Top 5 Produsen -->
+    <div class="producer-grid grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <!-- Peringkat 1 -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" aria-label="Lihat data geospasial dari Dinas Kependudukan dan Pencatatan Sipil" class="block cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <article class="group relative flex min-h-[250px] flex-col overflow-hidden rounded-2xl border border-blue-200 bg-[#f8fafc] p-5 shadow-[0_10px_24px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(15,23,42,0.13)]">
+            <div class="mt-2">
+                <p class="mt-1 text-6xl font-extrabold leading-none tracking-[-0.06em] text-slate-900">207</p>
+                <p class="mt-1 text-xs font-semibold text-slate-500">dataset tersedia</p>
+            </div>
+            <div class="mt-auto flex items-center gap-3 border-t border-blue-100 pt-4">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white p-1"><img src="assets/Lambang_Kabupaten_Bantul.jpg" alt="" class="h-full w-full object-contain"></span>
+                <h3 class="text-[11px] font-bold leading-snug text-slate-700">Dinas Kependudukan dan Pencatatan Sipil</h3>
+            </div>
+        </article>
+        </a>
+
+        <!-- Peringkat 2 -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" aria-label="Lihat data geospasial dari Dinas Pendidikan, Kepemudaan dan Olahraga" class="block cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <article class="group relative flex min-h-[250px] flex-col overflow-hidden rounded-2xl border border-blue-200 bg-[#f8fafc] p-5 shadow-[0_10px_24px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(15,23,42,0.13)]">
+            <div class="mt-2">
+                <p class="mt-1 text-6xl font-extrabold leading-none tracking-[-0.06em] text-slate-900">134</p>
+                <p class="mt-1 text-xs font-semibold text-slate-500">dataset tersedia</p>
+            </div>
+            <div class="mt-auto flex items-center gap-3 border-t border-blue-100 pt-4">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white p-1"><img src="assets/Lambang_Kabupaten_Bantul.jpg" alt="" class="h-full w-full object-contain"></span>
+                <h3 class="text-[11px] font-bold leading-snug text-slate-700">Dinas Pendidikan, Kepemudaan dan Olahraga</h3>
+            </div>
+        </article>
+        </a>
+
+        <!-- Peringkat 3 -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" aria-label="Lihat data geospasial dari Dinas Pertanahan dan Tata Ruang" class="block cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <article class="group relative flex min-h-[250px] flex-col overflow-hidden rounded-2xl border border-blue-200 bg-[#f8fafc] p-5 shadow-[0_10px_24px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(15,23,42,0.13)]">
+            <div class="mt-2">
+                <p class="mt-1 text-6xl font-extrabold leading-none tracking-[-0.06em] text-slate-900">127</p>
+                <p class="mt-1 text-xs font-semibold text-slate-500">dataset tersedia</p>
+            </div>
+            <div class="mt-auto flex items-center gap-3 border-t border-blue-100 pt-4">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white p-1"><img src="assets/Lambang_Kabupaten_Bantul.jpg" alt="" class="h-full w-full object-contain"></span>
+                <h3 class="text-[11px] font-bold leading-snug text-slate-700">Dinas Pertanahan dan Tata Ruang</h3>
+            </div>
+        </article>
+        </a>
+
+        <!-- Peringkat 4 -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" aria-label="Lihat data geospasial dari Badan Penanggulangan Bencana Daerah" class="block cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <article class="group relative flex min-h-[250px] flex-col overflow-hidden rounded-2xl border border-blue-200 bg-[#f8fafc] p-5 shadow-[0_10px_24px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(15,23,42,0.13)]">
+            <div class="mt-2">
+                <p class="mt-1 text-6xl font-extrabold leading-none tracking-[-0.06em] text-slate-900">78</p>
+                <p class="mt-1 text-xs font-semibold text-slate-500">dataset tersedia</p>
+            </div>
+            <div class="mt-auto flex items-center gap-3 border-t border-blue-100 pt-4">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white p-1"><img src="assets/Lambang_Kabupaten_Bantul.jpg" alt="" class="h-full w-full object-contain"></span>
+                <h3 class="text-[11px] font-bold leading-snug text-slate-700">Badan Penanggulangan Bencana Daerah</h3>
+            </div>
+        </article>
+        </a>
+
+        <!-- Peringkat 5 -->
+        <a href="https://data.bantulkab.go.id/search?search_data=&amp;sortdata=geospasial&amp;kategori_geo=Batas%20Wilayah&amp;instansi=&amp;tp=&amp;rangeyear=2024%20-%202026&amp;indicator_class=Klasifikasi&amp;topik_category=Topik&amp;bidang_urusan=Bidang%20Urusan&amp;nama_instansi=instansi&amp;owner_geo=&amp;ppage=10" aria-label="Lihat data geospasial dari Kementerian Agama" class="block cursor-pointer rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2">
+        <article class="group relative flex min-h-[250px] flex-col overflow-hidden rounded-2xl border border-blue-200 bg-[#f8fafc] p-5 shadow-[0_10px_24px_rgba(15,23,42,0.07)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_36px_rgba(15,23,42,0.13)]">
+            <div class="mt-2">
+                <p class="mt-1 text-6xl font-extrabold leading-none tracking-[-0.06em] text-slate-900">76</p>
+                <p class="mt-1 text-xs font-semibold text-slate-500">dataset tersedia</p>
+            </div>
+            <div class="mt-auto flex items-center gap-3 border-t border-blue-100 pt-4">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white p-1"><img src="assets/Lambang_Kabupaten_Bantul.jpg" alt="" class="h-full w-full object-contain"></span>
+                <h3 class="text-[11px] font-bold leading-snug text-slate-700">Kementerian Agama</h3>
+            </div>
+        </article>
+        </a>
+
+    </div>
+</div>
+</section>
+
+<!-- Ringkasan ekosistem data -->
+<section id="kolaborasi-dataset" aria-labelledby="data-summary-title" class="data-summary-section geo-menu-target relative overflow-hidden px-4 py-16 text-white md:py-20">
+    <div class="data-summary-grid relative z-10 mx-auto max-w-6xl">
+        <div class="data-summary-heading">
+            <p class="mb-3 text-[10px] font-bold uppercase tracking-[.22em]">Ekosistem data geospasial</p>
+            <h2 id="data-summary-title" class="max-w-md text-2xl font-extrabold leading-tight tracking-tight md:text-4xl">
+                Data geospasial tumbuh bersama kolaborasi.
+            </h2>
+            <p class="mt-4 max-w-sm text-sm leading-relaxed">
+                <span class="font-bold">36 produsen data</span> berbagi informasi geospasial untuk membantu memahami kondisi wilayah, mengenali potensi, dan merencanakan pembangunan Bantul dengan lebih terarah.
+            </p>
+        </div>
+        <a href="https://geoportal.bantulkab.go.id/catalogue/#/datasets" aria-label="Buka katalog dataset geospasial Geoportal Bantul" class="data-summary-primary">
+            <div>
+                <p class="data-summary-number">969</p>
+                <p class="data-summary-caption">Dataset geospasial</p>
+            </div>
+            <p class="data-summary-primary-copy">Jelajahi data untuk memahami kondisi dan potensi wilayah Bantul.</p>
+        </a>
+        <div class="data-summary-secondary">
+            <a href="https://geoportal.bantulkab.go.id/catalogue/#/documents" aria-label="Buka dokumen Geoportal Bantul">
+                <p class="data-summary-number">117</p>
+                <p class="data-summary-caption">Dokumen</p>
+            </a>
+            <a href="https://geoportal.bantulkab.go.id/catalogue/#/datasets" aria-label="Buka katalog Geoportal Bantul untuk melihat dashboard">
+                <p class="data-summary-number">5</p>
+                <p class="data-summary-caption">Dashboard</p>
+            </a>
+            <a href="https://geoportal.bantulkab.go.id/catalogue/#/datasets" aria-label="Buka katalog Geoportal Bantul untuk melihat GeoStory">
+                <p class="data-summary-number">3</p>
+                <p class="data-summary-caption">GeoStory</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Pilihan data dan dokumen -->
+<section id="katalog-data" aria-labelledby="featured-data-title" class="bg-[#e2ecf8]">
+<div class="mx-auto max-w-7xl px-4 pb-20 pt-16">
+    <div class="mb-7 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <p class="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">Jelajahi katalog</p>
+            <h2 id="featured-data-title" class="text-2xl font-extrabold tracking-tight text-slate-900 md:text-3xl">Temukan data pilihan</h2>
+            <p class="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">Peta dan dokumen geospasial pilihan untuk mengenal kondisi serta rencana pengembangan wilayah Bantul.</p>
+        </div>
+    </div>
+
+    <div class="catalog-slider-frame relative">
+    <div class="catalog-slider-track" role="region" aria-label="Pilihan dataset dan dokumen" tabindex="0">
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-slate-100">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/dataset-07392372-594c-403a-adea-765035562c7e-thumb-9e1fe78d-25cd-41d4-aa8d-1c25b10e4b9a.jpg"
+                    alt="Peta jumlah penduduk kelompok umur 70-74 tahun menurut kapanewon di Kabupaten Bantul"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-solid fa-map"></i> Dataset</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">Statistik penduduk</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-2 min-h-11 text-sm font-bold leading-relaxed text-slate-800">Jumlah Penduduk Kelompok Umur 70-74 Tahun menurut Kapanewon</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Peta jumlah penduduk usia 70-74 tahun per kapanewon. Statistik bersumber dari Dinas Kependudukan dan Pencatatan Sipil Kabupaten Bantul.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Dinas Kependudukan dan Pencatatan Sipil Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/dataset/521" target="_blank" rel="noopener noreferrer" aria-label="Lihat dataset Jumlah Penduduk Kelompok Umur 70-74 Tahun menurut Kapanewon di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-blue-700">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-slate-100">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/dataset-f879ef51-3e53-4c90-ae0f-3fa545b9a73a-thumb-95c5ea7e-58a2-4211-acb8-511f7b737d92.jpg"
+                    alt="Peta sebaran jembatan di Kabupaten Bantul"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-solid fa-map"></i> Dataset</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">Sebaran jembatan</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-2 min-h-11 text-sm font-bold leading-relaxed text-slate-800">Sebaran Jembatan di Kabupaten Bantul</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Peta titik lokasi jembatan di Bantul. Data baseline dari kegiatan deliniasi batas desa tahun 2019, telah divalidasi dan terstandarisasi KUGI.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Dinas Pertanahan dan Tata Ruang DIY; validasi oleh Diskominfo dan DPUPKP Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/dataset/931" target="_blank" rel="noopener noreferrer" aria-label="Lihat dataset Sebaran Jembatan di Kabupaten Bantul di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-blue-700">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-[#eef0eb]">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/document-3ff40e6b-f085-4223-8dfa-3a9688e2b069-thumb-72a0c2f5-0d48-4d97-96b5-085a3eb2d4c2.jpg"
+                    alt="Pratinjau dokumen Rencana Penetapan Sub BWP Prioritas RDTR dan PZ BWP Sewon Tahun 2018-2038"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-regular fa-file-lines"></i> Dokumen PDF</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">RDTR Sewon</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-3 min-h-[3.5rem] text-sm font-bold leading-relaxed text-slate-800">Rencana Penetapan Sub BWP Prioritas RDTR dan PZ BWP Sewon Tahun 2018-2038 (letak peta 1408-2241C)</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Peta penetapan Sub BWP prioritas di BWP Sewon sebagai lokasi pelaksanaan program prioritas RDTR, tersedia dalam format PDF.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Dinas Pertanahan dan Tata Ruang (Kundha Niti Mandala Sarta Tata Sasana) Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/document/1157" target="_blank" rel="noopener noreferrer" aria-label="Lihat dokumen Rencana Penetapan Sub BWP Prioritas RDTR dan PZ BWP Sewon Tahun 2018-2038 di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-emerald-600">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-slate-100">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/document-81f1572b-4b4e-4e7c-963d-2996faaf0de5-thumb-13c445f4-9ad9-4d45-9380-77106ba9383a.jpg"
+                    alt="Pratinjau dokumen Rencana Pola Ruang RDTR dan PZ BWP Kasihan Tahun 2018-2038"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> Dokumen PDF</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">RDTR Kasihan</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-3 min-h-[3.5rem] text-sm font-bold leading-relaxed text-slate-800">Rencana Pola Ruang RDTR dan PZ BWP Kasihan Tahun 2018-2038 (letak peta 1408-2236A)</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Peta alokasi subzona peruntukan di BWP Kasihan sebagai acuan pemanfaatan ruang dan peraturan zonasi.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Dinas Pertanahan dan Tata Ruang Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/document/1099" target="_blank" rel="noopener noreferrer" aria-label="Lihat dokumen Rencana Pola Ruang RDTR dan PZ BWP Kasihan Tahun 2018-2038 di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-emerald-600">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-slate-100">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/document-3014449a-d6c4-4cff-8e91-2c13471187d7-thumb-7caaafd3-ef99-4074-9735-c586da2f4517.jpg"
+                    alt="Thumbnail dokumen Rencana Jaringan Irigasi RTRW Kabupaten Bantul Tahun 2010–2030"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-regular fa-file-lines" aria-hidden="true"></i> Dokumen PDF</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">Pratinjau Geoportal</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-3 min-h-[3.5rem] text-sm font-bold leading-relaxed text-slate-800">Rencana Kawasan Rencana Jaringan Irigasi RTRW Kabupaten Bantul Tahun 2010 - 2030</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Peta rencana jaringan irigasi dalam struktur ruang RTRW Kabupaten Bantul. Sumber: Perda Nomor 4 Tahun 2011.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Badan Perencanaan Pembangunan Daerah Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/document/1065" target="_blank" rel="noopener noreferrer" aria-label="Lihat dokumen Rencana Kawasan Rencana Jaringan Irigasi RTRW Kabupaten Bantul Tahun 2010 sampai 2030 di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-emerald-600">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-emerald-50">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/geoapp-24d55dd2-b162-4c9b-aa06-ab5e4b595c33-thumb-db4b686c-15d0-496d-81cc-8a59f7b75783.jpg"
+                    alt="Thumbnail dashboard Bantul Hijau tentang penutup lahan dan sebaran ruang terbuka hijau"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-teal-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-solid fa-chart-area" aria-hidden="true"></i> Dashboard</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">Pratinjau Geoportal</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-2 min-h-11 text-sm font-bold leading-relaxed text-slate-800">(Dashboard) Bantul Hijau</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Dashboard interaktif yang menyajikan penutup lahan dan sebaran ruang terbuka hijau (RTH) di Kabupaten Bantul.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Dinas Pertanahan dan Tata Ruang serta Dinas Lingkungan Hidup Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/dashboard/1009" target="_blank" rel="noopener noreferrer" aria-label="Lihat dashboard Bantul Hijau di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-teal-600 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-teal-700">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+
+        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(15,23,42,0.12)]">
+            <div class="relative h-36 overflow-hidden bg-[#e8eee8]">
+                <img
+                    src="https://geoportal.bantulkab.go.id/uploaded/thumbs/dataset-83c2cab5-fd81-42e4-9c56-2bac4d2e5ab2-thumb-f85e0c04-ffa1-4e06-a6c6-6cf3d75faa45.jpg"
+                    alt="Peta sebaran jumlah koperasi tidak aktif menurut kapanewon di Kabupaten Bantul"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                >
+                <span class="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-bold text-white shadow-sm"><i class="fa-solid fa-map" aria-hidden="true"></i> Dataset</span>
+                <span class="absolute bottom-3 right-3 rounded-lg bg-white/90 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-500">Peta tematik</span>
+            </div>
+            <div class="flex min-h-[184px] flex-col p-4">
+                <h3 class="line-clamp-2 min-h-11 text-sm font-bold leading-relaxed text-slate-800">Jumlah Koperasi Tidak Aktif menurut Kapanewon</h3>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Peta persebaran koperasi tidak aktif menurut kapanewon di Kabupaten Bantul. Sumber statistik: Dinas Koperasi, UKM, Perindustrian dan Perdagangan Kabupaten Bantul.</p>
+                <p class="mt-3 flex items-start gap-2 text-[10px] leading-relaxed text-slate-400"><i class="fa-solid fa-building-user mt-0.5 shrink-0"></i><span>Dinas Koperasi, Usaha Kecil dan Menengah, Perindustrian dan Perdagangan Kabupaten Bantul</span></p>
+                <a href="https://geoportal.bantulkab.go.id/catalogue/#/dataset/192" target="_blank" rel="noopener noreferrer" aria-label="Lihat dataset Jumlah Koperasi Tidak Aktif menurut Kapanewon di Geoportal Bantul (buka tab baru)" class="mt-auto inline-flex self-end items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-[11px] font-bold text-white transition hover:bg-blue-700">Lihat <i class="fa-solid fa-arrow-right text-[9px]" aria-hidden="true"></i></a>
+            </div>
+        </article>
+    </div>
+    <div class="catalog-slider-controls" role="group" aria-label="Geser pilihan data">
+        <button type="button" class="featured-news-nav" data-catalog-prev aria-label="Geser kartu ke kiri">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="featured-news-nav" data-catalog-next aria-label="Geser kartu ke kanan">
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </button>
+    </div>
+    </div>
+</div>
+</section>
+
+<!-- Sistem terhubung -->
+<section id="integrasi" aria-labelledby="connected-systems-title" class="geo-menu-target mt-2 bg-[#1b3b54] text-white">
+    <div class="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:px-10 md:py-16 lg:grid-cols-[0.85fr_2fr] lg:items-center lg:gap-12">
+        <div class="max-w-md">
+            <p class="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-300">Terhubung dan terintegrasi</p>
+            <h2 id="connected-systems-title" class="text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+                Terintegrasi dengan berbagai <span class="font-extrabold">sistem</span>
+            </h2>
+            <p class="mt-4 text-sm leading-relaxed text-slate-300">
+                JARING BANTER menjadi bagian dari ekosistem informasi geospasial dan data yang saling mendukung.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-5">
+            <article class="flex flex-col items-center text-center">
+                <a href="https://tanahair.indonesia.go.id/portal-web/" target="_blank" rel="noopener noreferrer" aria-label="Buka Ina Geoportal di tab baru" class="mb-4 flex h-32 w-32 cursor-pointer items-center justify-center rounded-full bg-white p-4 text-blue-700 shadow-[0_12px_30px_rgba(0,0,0,0.16)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-4 focus-visible:ring-offset-[#1b3b54] md:h-36 md:w-36">
+                    <div class="flex items-center justify-center">
+                        <img src="assets/logo-geospasial-untuk-negeri.png" alt="Geospasial untuk Negeri" class="h-auto max-h-14 w-full max-w-24 object-contain">
+                    </div>
+                </a>
+                <h3 class="text-sm font-bold">Ina Geoportal</h3>
+                <p class="mt-2 max-w-xs text-xs leading-relaxed text-slate-300">
+                    Portal nasional untuk mencari, melihat, dan mengakses informasi serta layanan geospasial Indonesia.
+                </p>
+            </article>
+
+            <article class="flex flex-col items-center text-center">
+                <a href="https://data.bantulkab.go.id/" target="_blank" rel="noopener noreferrer" aria-label="Buka Sedata Sebantul di tab baru" class="mb-4 flex h-32 w-32 cursor-pointer items-center justify-center rounded-full bg-white p-4 text-emerald-700 shadow-[0_12px_30px_rgba(0,0,0,0.16)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300 focus-visible:ring-offset-4 focus-visible:ring-offset-[#1b3b54] md:h-36 md:w-36">
+                    <img src="https://data.bantulkab.go.id/logo/2.png" alt="Logo Sedata Sebantul" class="h-auto w-full object-contain">
+                </a>
+                <h3 class="text-sm font-bold">Sedata Sebantul</h3>
+                <p class="mt-2 max-w-xs text-xs leading-relaxed text-slate-300">
+                    Portal Satu Data Kabupaten Bantul untuk menemukan data statistik dan data sektoral yang dikelola perangkat daerah.
+                </p>
+            </article>
+
+            <article class="flex flex-col items-center text-center">
+                <a href="https://sidageplak.bantulkab.go.id/" target="_blank" rel="noopener noreferrer" aria-label="Buka Sidageplak Bantul di tab baru" class="mb-4 flex h-32 w-32 cursor-pointer items-center justify-center rounded-full bg-white p-4 text-sky-600 shadow-[0_12px_30px_rgba(0,0,0,0.16)] transition-transform duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:ring-offset-4 focus-visible:ring-offset-[#1b3b54] md:h-36 md:w-36">
+                    <img src="https://sidageplak.bantulkab.go.id/assets/media/logos/sidageplak.png" alt="Logo Sidageplak Bantul" class="h-auto w-full object-contain">
+                </a>
+                <h3 class="text-sm font-bold">Sidageplak Bantul</h3>
+                <p class="mt-2 max-w-xs text-xs leading-relaxed text-slate-300">
+                    Sistem Informasi Data Geospasial Kabupaten Bantul untuk menelusuri informasi spasial daerah sebagai dukungan perencanaan dan pengelolaan wilayah.
+                </p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- Berita geospasial -->
+<section id="kabar-geospasial" aria-labelledby="news-title" class="geo-menu-target bg-slate-50 py-14 md:py-20">
+    <div class="mx-auto grid max-w-7xl gap-10 px-4 md:px-6 lg:grid-cols-[0.9fr_1.25fr] lg:gap-12">
+        <div>
+            <div class="mb-6">
+                <p class="mb-2 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.16em] text-sky-600">
+                    <i class="fa-solid fa-award"></i> Rekam prestasi nasional
+                </p>
+                <h2 id="news-title" class="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-4xl">Berita unggulan</h2>
+                <p class="mt-3 text-sm leading-relaxed text-slate-600">Apresiasi dan kabar pilihan dari perjalanan pengelolaan informasi geospasial Kabupaten Bantul.</p>
+            </div>
+
+            <div class="featured-news" aria-label="Slider berita unggulan">
+                <div class="featured-news-viewport overflow-hidden rounded-2xl" aria-live="polite">
+                    <div class="featured-news-track flex">
+                        <article class="featured-news-slide shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.07)]" aria-label="Penghargaan Bhumandala Kanaka Kabupaten Bantul tahun 2024">
+                            <div class="flex items-center justify-between gap-3 border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white px-5 py-3">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-[10px] font-bold text-sky-800">
+                                    <i class="fa-solid fa-award" aria-hidden="true"></i> Penghargaan
+                                </span>
+                                <span class="text-[10px] font-semibold text-slate-500">Bhumandala Award 2024</span>
+                            </div>
+                            <div class="p-5">
+                                <img src="assets/bhumandala-kanaka-2024-photo-hd.jpg" alt="Pemerintah Kabupaten Bantul menerima penghargaan Bhumandala Kanaka Emas tahun 2024" loading="lazy" decoding="async" class="mb-4 h-auto w-full rounded-xl object-cover">
+                                <h3 class="text-lg font-extrabold leading-snug text-slate-900">Bhumandala Kanaka Tahun 2024</h3>
+                                <p class="mt-2 text-xs leading-relaxed text-slate-600">Pemerintah Kabupaten Bantul memperoleh Penghargaan Bhumandala Kanaka (Emas) untuk kategori simpul jaringan dalam Penyelenggaraan Bhumandala Award Tahun 2024 oleh Badan Informasi Geospasial.</p>
+                                <a href="https://bantulkab.go.id/penghargaan/detail/17349210563838/raih-bhumandala-kanaka--pemkab-bantul-berkomitmen-wujudkan-tata-kelola-data-yang-lebih-baik.html" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-2 text-xs font-bold text-blue-600 transition hover:text-blue-800">Lihat berita <i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i></a>
+                            </div>
+                        </article>
+                        <article class="featured-news-slide shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.07)]" aria-label="Bantul raih penghargaan Geoportal Terbaik pada Bhumandala Award 2022">
+                            <div class="flex items-center justify-between gap-3 border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white px-5 py-3">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-[10px] font-bold text-sky-800">
+                                    <i class="fa-solid fa-award" aria-hidden="true"></i> Penghargaan
+                                </span>
+                                <span class="text-[10px] font-semibold text-slate-500">Bhumandala Award 2022</span>
+                            </div>
+                            <div class="p-5">
+                                <img src="assets/bhumandala-award-2022.jpg" alt="Penerimaan penghargaan Bhumandala Award 2022 oleh Pemerintah Kabupaten Bantul" loading="lazy" decoding="async" class="mx-auto mb-4 aspect-video w-4/5 max-w-sm rounded-xl object-contain">
+                                <h3 class="text-lg font-extrabold leading-snug text-slate-900">Bantul Raih Penghargaan Geoportal Terbaik di Ajang Bhumandala Award 2022</h3>
+                                <p class="mt-2 text-xs leading-relaxed text-slate-600">Bantul meraih Bhumandala Rajata dan Bhumandala Kencana untuk kategori Simpul Jaringan dan Geoportal Terbaik tingkat Kabupaten.</p>
+                                <a href="https://bantulkab.go.id/berita/detail/5579/bantul-raih-penghargaan-geoportal-terbaik-di-ajang-bhumandala-award-2022.html" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center gap-2 text-xs font-bold text-blue-600 transition hover:text-blue-800">Lihat berita <i class="fa-solid fa-arrow-right text-[10px]" aria-hidden="true"></i></a>
+                            </div>
+                        </article>
+                        <article class="featured-news-slide shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.07)]" aria-label="Berita contoh 3 dari 4">
+                            <div class="flex items-center justify-between gap-3 border-b border-sky-100 bg-gradient-to-r from-sky-50 to-white px-5 py-3">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-[10px] font-bold text-sky-800">
+                                    <i class="fa-solid fa-water" aria-hidden="true"></i> Lingkungan
+                                </span>
+                                <span class="text-[10px] font-semibold text-slate-500">Contoh 3/4</span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="text-lg font-extrabold leading-snug text-slate-900">Contoh: Peta Interaktif untuk Memantau Ruang Terbuka Hijau</h3>
+                                <p class="mt-2 text-xs leading-relaxed text-slate-600">Simulasi berita fiktif mengenai dashboard peta yang menampilkan sebaran taman dan ruang terbuka hijau.</p>
+                                <div class="relative mt-5 overflow-hidden rounded-xl bg-gradient-to-br from-[#153b52] via-[#277c83] to-[#82b879] p-5 text-white">
+                                    <div class="absolute -right-7 -top-10 h-40 w-40 rounded-full border border-white/20"></div>
+                                    <div class="relative flex min-h-32 items-end justify-between gap-4">
+                                        <div>
+                                            <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-green-200">Visual demo geospasial</p>
+                                            <p class="mt-2 max-w-xs text-xl font-extrabold leading-tight">Ruang hijau<br>lebih terpantau</p>
+                                            <p class="mt-3 text-[10px] font-medium text-blue-100">Ilustrasi — bukan berita nyata</p>
+                                        </div>
+                                        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-green-200/80 bg-green-300/20 text-3xl text-green-200 shadow-lg">
+                                            <i class="fa-solid fa-leaf" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="featured-news-slide shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_10px_28px_rgba(15,23,42,0.07)]" aria-label="Berita contoh 4 dari 4">
+                            <div class="flex items-center justify-between gap-3 border-b border-violet-100 bg-gradient-to-r from-violet-50 to-white px-5 py-3">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-violet-100 px-3 py-1 text-[10px] font-bold text-violet-800">
+                                    <i class="fa-solid fa-database" aria-hidden="true"></i> Satu Data
+                                </span>
+                                <span class="text-[10px] font-semibold text-slate-500">Contoh 4/4</span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="text-lg font-extrabold leading-snug text-slate-900">Contoh: Kolaborasi Data Bantu Perencanaan Infrastruktur</h3>
+                                <p class="mt-2 text-xs leading-relaxed text-slate-600">Simulasi berita fiktif tentang penggabungan data jalan, fasilitas umum, dan permukiman untuk mendukung perencanaan.</p>
+                                <div class="relative mt-5 overflow-hidden rounded-xl bg-gradient-to-br from-[#252c62] via-[#4d5ba1] to-[#a880c4] p-5 text-white">
+                                    <div class="absolute -right-7 -top-10 h-40 w-40 rounded-full border border-white/20"></div>
+                                    <div class="relative flex min-h-32 items-end justify-between gap-4">
+                                        <div>
+                                            <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-violet-200">Visual demo geospasial</p>
+                                            <p class="mt-2 max-w-xs text-xl font-extrabold leading-tight">Data terhubung,<br>rencana terarah</p>
+                                            <p class="mt-3 text-[10px] font-medium text-blue-100">Ilustrasi — bukan berita nyata</p>
+                                        </div>
+                                        <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-violet-200/80 bg-violet-300/20 text-3xl text-violet-200 shadow-lg">
+                                            <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2" role="group" aria-label="Pilih berita unggulan">
+                        <button type="button" class="featured-news-dot is-active" aria-label="Tampilkan berita 1" aria-current="true"></button>
+                        <button type="button" class="featured-news-dot" aria-label="Tampilkan berita 2" aria-current="false"></button>
+                        <button type="button" class="featured-news-dot" aria-label="Tampilkan berita 3" aria-current="false"></button>
+                        <button type="button" class="featured-news-dot" aria-label="Tampilkan berita 4" aria-current="false"></button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" class="featured-news-nav" data-featured-news-prev aria-label="Berita sebelumnya">
+                            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="featured-news-nav" data-featured-news-next aria-label="Berita berikutnya">
+                            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="mb-6 flex items-end justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-3xl">Kabar geospasial terkini</h2>
+                </div>
+                <a href="kabar-geospasial.html" class="mb-1 inline-flex shrink-0 items-center gap-2 text-[10px] font-bold text-blue-600 transition hover:text-blue-800">
+                    Semua berita <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div id="berita" class="space-y-4">
+                <article class="group flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_6px_20px_rgba(15,23,42,0.04)] transition hover:border-blue-200 hover:shadow-md sm:flex-row">
+                    <div class="relative h-40 shrink-0 overflow-hidden rounded-xl bg-[#dce9e2] sm:h-32 sm:w-40">
+                        <img src="assets/kabar-geospasial/batas-rt-tirtomulyo.jpg" alt="Pendampingan pemetaan batas RT di Kalurahan Tirtomulyo dan Jambidan" loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <span class="absolute bottom-2 left-2 rounded-md bg-white/90 px-2 py-1 text-[8px] font-bold uppercase tracking-wide text-slate-600">Pemetaan batas</span>
+                    </div>
+                    <div class="flex min-w-0 flex-1 flex-col">
+                        <p class="text-[9px] font-medium text-slate-400">04 Sep 2026 <span class="mx-1.5">•</span><span class="font-bold text-blue-600">Diskominfo Bantul</span></p>
+                        <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900">Diskominfo Bantul Dampingi Verifikasi Pemetaan Batas RT di Kalurahan Tirtomulyo dan Jambidan</h3>
+                        <p class="mt-2 text-[11px] leading-relaxed text-slate-600">Pendampingan teknis pengukuran koordinat batas administratif berbasis partisipatif untuk kepastian batas wilayah.</p>
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            <span class="rounded bg-slate-100 px-2 py-1 text-[9px] font-medium text-slate-500">#BatasWilayah</span>
+                            <span class="rounded bg-slate-100 px-2 py-1 text-[9px] font-medium text-slate-500">#PemetaanPartisipatif</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="group flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_6px_20px_rgba(15,23,42,0.04)] transition hover:border-blue-200 hover:shadow-md sm:flex-row">
+                    <div class="relative h-40 shrink-0 overflow-hidden rounded-xl bg-[#e6e6d8] sm:h-32 sm:w-40">
+                        <img src="assets/kabar-geospasial/batas-rt-tirtohargo.jpg" alt="Verifikasi batas RT di Kalurahan Tirtohargo, Jambidan, dan Segoroyoso" loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <span class="absolute bottom-2 left-2 rounded-md bg-white/90 px-2 py-1 text-[8px] font-bold uppercase tracking-wide text-slate-600">Verifikasi batas RT</span>
+                    </div>
+                    <div class="flex min-w-0 flex-1 flex-col">
+                        <p class="text-[9px] font-medium text-slate-400">24 Agu 2026 <span class="mx-1.5">•</span><span class="font-bold text-blue-600">Tata Pemerintahan</span></p>
+                        <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900">Diskominfo Bantul Dampingi Verifikasi Batas RT di Kalurahan Tirtohargo, Jambidan, dan Segoroyoso</h3>
+                        <p class="mt-2 text-[11px] leading-relaxed text-slate-600">Sinkronisasi data segmen garis batas RT dengan mengadopsi citra satelit tegak resolusi tinggi.</p>
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            <span class="rounded bg-slate-100 px-2 py-1 text-[9px] font-medium text-slate-500">#VerifikasiData</span>
+                            <span class="rounded bg-slate-100 px-2 py-1 text-[9px] font-medium text-slate-500">#GeospasialBantul</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="group flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_6px_20px_rgba(15,23,42,0.04)] transition hover:border-blue-200 hover:shadow-md sm:flex-row">
+                    <div class="relative h-40 shrink-0 overflow-hidden rounded-xl bg-[#d9e2e4] sm:h-32 sm:w-40">
+                        <img src="assets/kabar-geospasial/sinkronisasi-data-geospasial.jpg" alt="Sinkronisasi pemanfaatan data geospasial di Kabupaten Bantul" loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <span class="absolute bottom-2 left-2 rounded-md bg-white/90 px-2 py-1 text-[8px] font-bold uppercase tracking-wide text-slate-600">Data geospasial</span>
+                    </div>
+                    <div class="flex min-w-0 flex-1 flex-col">
+                        <p class="text-[9px] font-medium text-slate-400">18 Agu 2026 <span class="mx-1.5">•</span><span class="font-bold text-blue-600">Diskominfo Bantul</span></p>
+                        <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900">Sinkronisasi Pemanfaatan Data Geospasial Memperkuat Integrasi Data Antarperangkat Daerah</h3>
+                        <p class="mt-2 text-[11px] leading-relaxed text-slate-600">Pemerintah Kabupaten Bantul melalui Dinas Komunikasi dan Informatika menggelar sinkronisasi pemanfaatan data geospasial.</p>
+                        <div class="mt-3 flex flex-wrap gap-1.5">
+                            <span class="rounded bg-slate-100 px-2 py-1 text-[9px] font-medium text-slate-500">#DataGeospasial</span>
+                            <span class="rounded bg-slate-100 px-2 py-1 text-[9px] font-medium text-slate-500">#IntegrasiData</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Seri GeoStory -->
+<section id="geostory" aria-labelledby="geostory-title" class="bg-[#0c1428] py-14 text-white md:py-20">
+    <div class="mx-auto max-w-7xl px-4 md:px-6">
+        <div class="mb-9 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div>
+                <h2 id="geostory-title" class="max-w-4xl text-2xl font-extrabold leading-tight tracking-tight md:text-3xl lg:text-4xl">
+                    GeoStory Bantul: Menuturkan Data dalam Cerita &amp; Tempat
+                </h2>
+                <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-300">
+                    Cerita tentang orang, proses, dan tempat di balik informasi geospasial Kabupaten Bantul.
+                </p>
+            </div>
+            <button type="button" id="open-geostory-frame" aria-haspopup="dialog" aria-controls="geostory-frame" class="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-blue-600 px-5 py-3 text-[10px] font-bold uppercase tracking-wide text-white shadow-lg shadow-blue-950/40 transition hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1428] md:self-auto">
+                Jelajahi seri GeoStory <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <a href="https://www.instagram.com/reel/DX_pKrhSVB0/?utm_source=ig_web_copy_link&amp;psln=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener noreferrer" aria-label="Tonton Capturing The Story: Behind The Map Bantul di Instagram (buka tab baru)" class="group block overflow-hidden rounded-[24px] border border-slate-700/70 bg-slate-950 shadow-[0_18px_40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/50 hover:shadow-[0_24px_48px_rgba(0,0,0,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
+                <div class="relative h-56 overflow-hidden bg-[#263d36]">
+                    <iframe src="https://www.instagram.com/reel/DX_pKrhSVB0/embed/" title="Pratinjau Reel Instagram: peta batas RT Kelurahan Srigading, Bantul" aria-hidden="true" tabindex="-1" loading="lazy" class="pointer-events-none absolute inset-0 h-full w-full border-0"></iframe>
+                    <span class="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-black/70 px-3 py-1.5 text-[9px] font-medium text-white backdrop-blur"><i class="fa-regular fa-circle-play text-cyan-300"></i> 08:42 Menit</span>
+                </div>
+                <div class="p-5 md:p-6">
+                    <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-cyan-300">Dokumenter khusus</p>
+                    <h3 class="mt-2 min-h-[3.1rem] text-lg font-bold leading-snug text-white md:min-h-[4.65rem] xl:min-h-[3.1rem]">Capturing The Story: Behind The Map Bantul</h3>
+                    <p class="mt-3 min-h-[60px] text-xs leading-relaxed text-slate-400">Di balik garis batas dan koordinat presisi, ada dedikasi para surveyor yang menelusuri wilayah Bantul.</p>
+                    <div class="mt-5 flex items-center justify-between border-t border-slate-800 pt-4">
+                        <span class="text-[10px] text-slate-400">Diskominfo <span class="mx-1">•</span> 2026</span>
+                        <span aria-hidden="true" class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white transition group-hover:bg-blue-500"><i class="fa-solid fa-play text-[11px]"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/reel/DP5ya9MEr-V/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Reel Hari Informasi Geospasial di Instagram (buka tab baru)" class="group block overflow-hidden rounded-[24px] border border-slate-700/70 bg-slate-950 shadow-[0_18px_40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/50 hover:shadow-[0_24px_48px_rgba(0,0,0,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
+                <div class="relative h-56 overflow-hidden bg-[#293d2b]">
+                    <iframe src="https://www.instagram.com/reel/DP5ya9MEr-V/embed/" title="Pratinjau Reel Hari Informasi Geospasial" aria-hidden="true" tabindex="-1" loading="lazy" class="pointer-events-none absolute inset-0 h-full w-full border-0"></iframe>
+                    <span class="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-black/70 px-3 py-1.5 text-[9px] font-medium text-white backdrop-blur"><i class="fa-brands fa-instagram text-cyan-300"></i> Instagram Reel</span>
+                </div>
+                <div class="p-5 md:p-6">
+                    <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-cyan-300">Peringatan geospasial</p>
+                    <h3 class="mt-2 min-h-[3.1rem] text-lg font-bold leading-snug text-white md:min-h-[4.65rem] xl:min-h-[3.1rem]">Hari Informasi Geospasial</h3>
+                    <p class="mt-3 min-h-[60px] text-xs leading-relaxed text-slate-400">Peringatan Hari Informasi Geospasial pada 17 Oktober 2025, menyoroti peran informasi geospasial bagi pembangunan.</p>
+                    <div class="mt-5 flex items-center justify-between border-t border-slate-800 pt-4">
+                        <span class="text-[10px] text-slate-400">Sedata Sebantul <span class="mx-1">•</span> 2025</span>
+                        <span aria-hidden="true" class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white transition group-hover:bg-blue-500"><i class="fa-solid fa-play text-[11px]"></i></span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/reel/DLXAzNnzOvN/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Reel Pelatihan Survei Pemetaan di Instagram (buka tab baru)" class="group block overflow-hidden rounded-[24px] border border-slate-700/70 bg-slate-950 shadow-[0_18px_40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/50 hover:shadow-[0_24px_48px_rgba(0,0,0,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950">
+                <div class="relative h-56 overflow-hidden bg-[#344b3b]">
+                    <iframe src="https://www.instagram.com/reel/DLXAzNnzOvN/embed/" title="Pratinjau Reel Pelatihan Survei Pemetaan" aria-hidden="true" tabindex="-1" loading="lazy" class="pointer-events-none absolute inset-0 h-full w-full border-0"></iframe>
+                    <span class="absolute bottom-4 right-4 inline-flex items-center gap-1.5 rounded-full bg-black/70 px-3 py-1.5 text-[9px] font-medium text-white backdrop-blur"><i class="fa-brands fa-instagram text-cyan-300"></i> Instagram Reel</span>
+                </div>
+                <div class="p-5 md:p-6">
+                    <p class="text-[9px] font-bold uppercase tracking-[0.14em] text-cyan-300">Peningkatan kapasitas</p>
+                    <h3 class="mt-2 min-h-[3.1rem] text-lg font-bold leading-snug text-white md:min-h-[4.65rem] xl:min-h-[3.1rem]">Pelatihan Survei Pemetaan</h3>
+                    <p class="mt-3 min-h-[60px] text-xs leading-relaxed text-slate-400">Kegiatan pelatihan survei pemetaan untuk mendukung peningkatan keterampilan di bidang informasi geospasial.</p>
+                    <div class="mt-5 flex items-center justify-between border-t border-slate-800 pt-4">
+                        <span class="text-[10px] text-slate-400">Diskominfo Bantul</span>
+                        <span aria-hidden="true" class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white transition group-hover:bg-blue-500"><i class="fa-solid fa-play text-[11px]"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative bg-[#20252b] text-slate-300">
+        <div class="mx-auto grid max-w-7xl gap-10 px-6 pb-10 pt-12 sm:grid-cols-2 lg:grid-cols-[1.1fr_1fr_0.8fr_0.8fr] lg:gap-12 lg:px-8 lg:pb-14 lg:pt-16">
+            <div>
+                <a href="#top" class="inline-flex items-center text-xl font-extrabold tracking-tight text-white" aria-label="Jaring Banter, kembali ke atas">
+                    <span>JARING<span class="text-sky-300"> BANTER</span></span>
+                </a>
+                <p class="mt-2 text-[10px] font-medium text-slate-400">Satu Data Geospasial Kabupaten Bantul</p>
+                <p class="mt-6 text-xs text-slate-300">© 2026 Pemerintah Kabupaten Bantul</p>
+                <div class="mt-5 flex items-center gap-2.5" aria-label="Media sosial">
+                    <span aria-label="Twitter" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-sm text-slate-200"><i class="fa-brands fa-x-twitter"></i></span>
+                    <span aria-label="Facebook" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-sm text-slate-200"><i class="fa-brands fa-facebook-f"></i></span>
+                    <span aria-label="Instagram" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-sm text-slate-200"><i class="fa-brands fa-instagram"></i></span>
+                    <span aria-label="YouTube" class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-sm text-slate-200"><i class="fa-brands fa-youtube"></i></span>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="mb-4 text-sm font-bold text-white">Alamat</h2>
+                <address class="not-italic text-xs leading-relaxed text-slate-300">
+                    Jl. Robert Wolter Monginsidi, Kurahan,<br>
+                    Bantul, Kec. Bantul,<br>
+                    Kabupaten Bantul, Daerah Istimewa Yogyakarta 55711
+                </address>
+                <a href="mailto:diskominfo@bantulkab.go.id" class="mt-4 inline-block text-xs text-slate-300 transition hover:text-white">diskominfo@bantulkab.go.id</a>
+                <a href="tel:+62274367509" class="mt-1 block text-xs text-slate-300 transition hover:text-white">(0274) 367509</a>
+            </div>
+
+            <nav aria-label="Informasi">
+                <h2 class="mb-4 text-sm font-bold text-white">Informasi</h2>
+                <ul class="space-y-2.5 text-xs">
+                    <li><a href="#top" class="transition hover:text-white">Sedata Sebantul</a></li>
+                    <li><a href="#top" class="transition hover:text-white">Geoportal</a></li>
+                    <li><a href="#katalog-data" class="transition hover:text-white">Katalog Data</a></li>
+                    <li><a href="simpul-jaringan.html" class="transition hover:text-white">Simpul jaringan</a></li>
+                    <li><a href="kabar-geospasial.html" class="transition hover:text-white">Kabar Geospasial</a></li>
+                    <li><a href="#geostory" class="transition hover:text-white">GeoStory</a></li>
+                </ul>
+            </nav>
+
+            <div>
+                <h2 class="mb-4 text-sm font-bold text-white">Pengunjung</h2>
+                <dl class="space-y-2.5 text-xs">
+                    <div class="flex items-center justify-between gap-3"><dt>Hari ini</dt><dd class="font-semibold text-slate-200">—</dd></div>
+                    <div class="flex items-center justify-between gap-3"><dt>Bulan ini</dt><dd class="font-semibold text-slate-200">—</dd></div>
+                    <div class="flex items-center justify-between gap-3"><dt>Total</dt><dd class="font-semibold text-slate-200">—</dd></div>
+                </dl>
+                <p class="mt-3 text-[10px] leading-relaxed text-slate-500">Statistik akan ditampilkan setelah layanan analitik terhubung.</p>
+            </div>
+        </div>
+    </footer>
+
+    <dialog id="geostory-frame" aria-labelledby="geostory-frame-title" class="fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 backdrop:bg-slate-950/65 backdrop:backdrop-blur-sm">
+        <div class="h-full overflow-x-hidden overflow-y-auto bg-[#f4f7fb] text-slate-800">
+            <header class="site-header sticky top-0 z-30 backdrop-blur-md text-white">
+                <div class="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
+                    <div class="flex items-center min-w-0 gap-3">
+                        <div>
+                            <span class="font-extrabold text-lg tracking-tight text-white block leading-tight">Jaring<span class="text-sky-300">Banter</span></span>
+                            <span class="text-[10px] text-slate-300 font-medium whitespace-nowrap">Satu Data Geospasial Kabupaten Bantul</span>
+                        </div>
+                    </div>
+                    <nav class="hidden md:flex items-center gap-8 text-sm font-semibold" aria-label="Navigasi GeoStory">
+                        <a href="#top" class="transition">Beranda</a>
+                        <a href="#data-summary-title" class="transition">Sedata Sebantul</a>
+                        <a href="#katalog-data" class="transition">Katalog Data</a>
+                        <a href="#geostory" class="transition">Infografis</a>
+                        <div class="geo-dropdown relative">
+                            <button type="button" id="geostory-geo-menu-toggle" class="geo-menu-toggle transition flex items-center gap-2" aria-haspopup="true" aria-expanded="false" aria-controls="geostory-geo-menu">
+                                Tentang <i class="fa-solid fa-chevron-down text-[10px]" aria-hidden="true"></i>
+                            </button>
+                            <div id="geostory-geo-menu" class="geo-menu" aria-label="Tentang Jaring Banter" aria-hidden="true">
+                                <a href="#simpul-jaringan">Simpul Jaringan</a>
+                                <a href="#kategori-data">Kategori Data</a>
+                                <a href="#produsen-data">Produsen Data</a>
+                                <a href="#kolaborasi-dataset">Kolaborasi Dataset</a>
+                                <a href="#integrasi">Integrasi</a>
+                                <a href="#kabar-geospasial">Kabar Geospasial</a>
+                                <a href="#geostory">GeoStory</a>
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="flex items-center gap-2 text-slate-700">
+                        <a href="#hero-dataset-search" aria-label="Cari data geospasial" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-magnifying-glass text-sm" aria-hidden="true"></i></a>
+                        <a href="https://www.youtube.com/c/BantulTV" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-brands fa-youtube text-sm" aria-hidden="true"></i></a>
+                        <a href="https://www.instagram.com/pemkabbantul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition"><i class="fa-brands fa-instagram text-base" aria-hidden="true"></i></a>
+                        <button type="button" id="close-geostory-frame" aria-label="Tutup GeoStory" class="social-link w-9 h-9 rounded-full flex items-center justify-center transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300">
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="mx-auto max-w-6xl px-4 pb-12 pt-6 sm:px-6 sm:pt-9">
+                <section class="relative mb-8 overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#102e50] via-[#14506b] to-[#13736a] px-5 py-7 text-white shadow-[0_20px_50px_rgba(16,46,80,.18)] sm:px-8 sm:py-9">
+                    <div class="pointer-events-none absolute -right-10 -top-20 h-64 w-64 rounded-full border border-white/10"></div>
+                    <div class="pointer-events-none absolute -right-1 top-0 h-48 w-48 rounded-full border border-white/10"></div>
+                    <div class="relative flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                        <div class="max-w-2xl">
+                            <p class="mb-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[8px] font-bold uppercase tracking-[.18em] text-cyan-100">
+                                <i class="fa-solid fa-compass" aria-hidden="true"></i> GeoStory / Bantul
+                            </p>
+                            <h1 id="geostory-frame-title" class="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">Satu wilayah,<br class="sm:hidden"> banyak cerita.</h1>
+                            <p class="mt-3 max-w-xl text-xs leading-relaxed text-blue-50/80 sm:text-sm">Ikuti jejak orang, proses, dan inovasi yang membentuk informasi geospasial Kabupaten Bantul.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section aria-labelledby="geostory-timeline-title">
+                    <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <p class="text-[8px] font-bold uppercase tracking-[.18em] text-blue-600">Jejak GeoStory</p>
+                            <h2 id="geostory-timeline-title" class="mt-1 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl">Cerita dari lapangan</h2>
+                        </div>
+                        <p class="text-[9px] font-medium text-slate-500">Pilih cerita untuk membuka video aslinya</p>
+                    </div>
+
+                    <div class="relative space-y-4">
+                        <div class="pointer-events-none absolute bottom-8 left-[19px] top-6 w-px bg-gradient-to-b from-cyan-400 via-blue-300 to-amber-300 sm:left-[25px]"></div>
+
+                        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-stretch gap-3 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-4">
+                            <div class="relative z-10 flex justify-center pt-5"><span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-100 bg-white font-mono text-[9px] font-bold text-blue-700 shadow-sm">01</span></div>
+                            <a href="https://www.instagram.com/reel/DYELQv4ywon/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Capturing The Story: Behind The Map di Instagram, buka tab baru" class="group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:grid-cols-[220px_minmax(0,1fr)]">
+                                <div class="relative aspect-[1.4] overflow-hidden bg-slate-100 md:aspect-auto md:min-h-[190px]"><img src="assets/geostory/behind-the-map.png" alt="Sampul Capturing The Story: Behind The Map" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-contain p-2"></div>
+                                <div class="flex flex-col justify-center p-4 sm:p-5">
+                                    <div class="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[.16em] text-blue-600"><span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span> Di balik peta</div>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900 sm:text-base">Capturing The Story: Behind The Map</h3>
+                                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-xs">Cerita di balik pengukuran, kerja lapangan, dan kolaborasi yang membentuk peta Bantul.</p>
+                                    <span class="mt-4 inline-flex items-center gap-2 text-[8px] font-extrabold uppercase tracking-wide text-slate-700 transition group-hover:text-blue-700">Tonton di Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[8px]" aria-hidden="true"></i></span>
+                                </div>
+                            </a>
+                        </article>
+
+                        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-stretch gap-3 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-4">
+                            <div class="relative z-10 flex justify-center pt-5"><span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-100 bg-white font-mono text-[9px] font-bold text-blue-700 shadow-sm">02</span></div>
+                            <a href="https://www.instagram.com/reel/DYED35nSD57/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Verifikasi Lapangan Batas RT Srigading di Instagram, buka tab baru" class="group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:grid-cols-[minmax(0,1fr)_220px]">
+                                <div class="flex flex-col justify-center p-4 sm:p-5 md:order-1">
+                                    <div class="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[.16em] text-blue-600"><span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Cerita lapangan</div>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900 sm:text-base">Verifikasi Lapangan Batas RT Srigading</h3>
+                                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-xs">Menelusuri batas RT Srigading melalui verifikasi dan kerja bersama di lapangan.</p>
+                                    <span class="mt-4 inline-flex items-center gap-2 text-[8px] font-extrabold uppercase tracking-wide text-slate-700 transition group-hover:text-blue-700">Tonton di Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[8px]" aria-hidden="true"></i></span>
+                                </div>
+                                <div class="relative order-first aspect-[1.4] overflow-hidden bg-slate-100 md:order-2 md:aspect-auto md:min-h-[190px]"><img src="assets/geostory/verifikasi-batas-rt-srigading.png" alt="Sampul verifikasi lapangan batas RT Srigading" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-contain p-2"></div>
+                            </a>
+                        </article>
+
+                        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-stretch gap-3 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-4">
+                            <div class="relative z-10 flex justify-center pt-5"><span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-100 bg-white font-mono text-[9px] font-bold text-blue-700 shadow-sm">03</span></div>
+                            <a href="https://www.instagram.com/reel/DNVClo6JpUE/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Pemetaan dengan GNSS di Instagram, buka tab baru" class="group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:grid-cols-[220px_minmax(0,1fr)]">
+                                <div class="relative aspect-[1.4] overflow-hidden bg-slate-100 md:aspect-auto md:min-h-[190px]"><img src="assets/geostory/pemetaan-gnss.png" alt="Sampul GeoStory pemetaan dengan GNSS" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-contain p-2"></div>
+                                <div class="flex flex-col justify-center p-4 sm:p-5">
+                                    <div class="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[.16em] text-blue-600"><span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span> Teknologi survei</div>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900 sm:text-base">Pemetaan dengan GNSS</h3>
+                                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-xs">Mengenal pemetaan berbasis GNSS untuk menangkap posisi dengan presisi.</p>
+                                    <span class="mt-4 inline-flex items-center gap-2 text-[8px] font-extrabold uppercase tracking-wide text-slate-700 transition group-hover:text-blue-700">Tonton di Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[8px]" aria-hidden="true"></i></span>
+                                </div>
+                            </a>
+                        </article>
+
+                        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-stretch gap-3 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-4">
+                            <div class="relative z-10 flex justify-center pt-5"><span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-100 bg-white font-mono text-[9px] font-bold text-blue-700 shadow-sm">04</span></div>
+                            <a href="https://www.instagram.com/reel/DItUHlSyzrR/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Konsolidasi Data Padukuhan dan RT di Instagram, buka tab baru" class="group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:grid-cols-[minmax(0,1fr)_220px]">
+                                <div class="flex flex-col justify-center p-4 sm:p-5 md:order-1">
+                                    <div class="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[.16em] text-blue-600"><span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Data wilayah</div>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900 sm:text-base">Konsolidasi Data Padukuhan dan RT</h3>
+                                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-xs">Menyatukan data Padukuhan dan RT agar informasi wilayah tersusun lebih utuh.</p>
+                                    <span class="mt-4 inline-flex items-center gap-2 text-[8px] font-extrabold uppercase tracking-wide text-slate-700 transition group-hover:text-blue-700">Tonton di Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[8px]" aria-hidden="true"></i></span>
+                                </div>
+                                <div class="relative order-first aspect-[1.4] overflow-hidden bg-slate-100 md:order-2 md:aspect-auto md:min-h-[190px]"><img src="assets/geostory/konsolidasi-padukuhan-rt.png" alt="Sampul GeoStory konsolidasi data padukuhan dan RT" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-contain p-2"></div>
+                            </a>
+                        </article>
+
+                        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-stretch gap-3 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-4">
+                            <div class="relative z-10 flex justify-center pt-5"><span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-100 bg-white font-mono text-[9px] font-bold text-blue-700 shadow-sm">05</span></div>
+                            <a href="https://www.instagram.com/reel/DCDXvEHymWf/" target="_blank" rel="noopener noreferrer" aria-label="Tonton Kabupaten Bantul Raih Bhumandala Kanaka 2024 di Instagram, buka tab baru" class="group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:grid-cols-[220px_minmax(0,1fr)]">
+                                <div class="relative aspect-[1.4] overflow-hidden bg-slate-100 md:aspect-auto md:min-h-[190px]"><img src="assets/geostory/bhumandala-kanaka-2024.png" alt="Sampul GeoStory Kabupaten Bantul Raih Bhumandala Kanaka 2024" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-contain p-2"></div>
+                                <div class="flex flex-col justify-center p-4 sm:p-5">
+                                    <div class="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[.16em] text-blue-600"><span class="h-1.5 w-1.5 rounded-full bg-cyan-500"></span> Capaian Bantul</div>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900 sm:text-base">Kabupaten Bantul Raih Bhumandala Kanaka 2024</h3>
+                                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-xs">Kilas balik capaian Bantul dalam pengelolaan informasi geospasial.</p>
+                                    <span class="mt-4 inline-flex items-center gap-2 text-[8px] font-extrabold uppercase tracking-wide text-slate-700 transition group-hover:text-blue-700">Tonton di Instagram <i class="fa-solid fa-arrow-up-right-from-square text-[8px]" aria-hidden="true"></i></span>
+                                </div>
+                            </a>
+                        </article>
+
+                        <article class="relative grid grid-cols-[40px_minmax(0,1fr)] items-stretch gap-3 sm:grid-cols-[52px_minmax(0,1fr)] sm:gap-4">
+                            <div class="relative z-10 flex justify-center pt-5"><span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-100 bg-white font-mono text-[9px] font-bold text-blue-700 shadow-sm">06</span></div>
+                            <a href="https://youtu.be/remOrLZWO38" target="_blank" rel="noopener noreferrer" aria-label="Tonton Simpul Jaringan Kabupaten Bantul dalam Penyelenggaraan Informasi Geospasial di YouTube, buka tab baru" class="group grid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_8px_24px_rgba(15,23,42,.05)] transition hover:-translate-y-0.5 hover:border-cyan-200 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 md:grid-cols-[minmax(0,1fr)_220px]">
+                                <div class="flex flex-col justify-center p-4 sm:p-5 md:order-1">
+                                    <div class="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[.16em] text-blue-600"><span class="h-1.5 w-1.5 rounded-full bg-amber-400"></span> Informasi geospasial</div>
+                                    <h3 class="mt-2 text-sm font-extrabold leading-snug text-slate-900 sm:text-base">Simpul Jaringan Kabupaten Bantul</h3>
+                                    <p class="mt-2 text-[10px] leading-relaxed text-slate-500 sm:text-xs">Mengenal peran simpul jaringan dalam penyelenggaraan informasi geospasial.</p>
+                                    <span class="mt-4 inline-flex items-center gap-2 text-[8px] font-extrabold uppercase tracking-wide text-slate-700 transition group-hover:text-blue-700">Tonton di YouTube <i class="fa-solid fa-arrow-up-right-from-square text-[8px]" aria-hidden="true"></i></span>
+                                </div>
+                                <div class="relative order-first aspect-[1.4] overflow-hidden bg-slate-100 md:order-2 md:aspect-auto md:min-h-[190px]"><img src="assets/geostory/simpul-jaringan-bantul.png" alt="Sampul video Simpul Jaringan Kabupaten Bantul" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-contain p-2"></div>
+                            </a>
+                        </article>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </dialog>
+
+    <!-- Script JavaScript untuk Interaktif Globe 3D -->
+    <script>
+        const geoDropdown = document.querySelector('.geo-dropdown');
+        const geoMenuToggle = document.getElementById('geo-menu-toggle');
+        const geoMenu = document.getElementById('geo-menu');
+        if (geoDropdown && geoMenuToggle && geoMenu) {
+            const setGeoMenuOpen = isOpen => {
+                geoDropdown.classList.toggle('is-open', isOpen);
+                geoMenuToggle.setAttribute('aria-expanded', String(isOpen));
+                geoMenu.setAttribute('aria-hidden', String(!isOpen));
+            };
+
+            geoMenuToggle.addEventListener('click', () => {
+                setGeoMenuOpen(geoMenuToggle.getAttribute('aria-expanded') !== 'true');
+            });
+            geoMenu.addEventListener('click', event => {
+                if (event.target instanceof Element && event.target.closest('a')) {
+                    setGeoMenuOpen(false);
+                }
+            });
+            document.addEventListener('click', event => {
+                if (event.target instanceof Node && !geoDropdown.contains(event.target)) {
+                    setGeoMenuOpen(false);
+                }
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && geoDropdown.classList.contains('is-open')) {
+                    setGeoMenuOpen(false);
+                    geoMenuToggle.focus();
+                }
+            });
+        }
+
+        const featuredNews = document.querySelector('.featured-news');
+        if (featuredNews) {
+            const featuredTrack = featuredNews.querySelector('.featured-news-track');
+            const featuredSlides = [...featuredNews.querySelectorAll('.featured-news-slide')];
+            const featuredDots = [...featuredNews.querySelectorAll('.featured-news-dot')];
+            let activeFeaturedSlide = 0;
+
+            const showFeaturedSlide = index => {
+                activeFeaturedSlide = (index + featuredSlides.length) % featuredSlides.length;
+                featuredTrack.style.transform = `translateX(-${activeFeaturedSlide * 100}%)`;
+                featuredSlides.forEach((slide, slideIndex) => {
+                    slide.setAttribute('aria-hidden', String(slideIndex !== activeFeaturedSlide));
+                });
+                featuredDots.forEach((dot, dotIndex) => {
+                    const isActive = dotIndex === activeFeaturedSlide;
+                    dot.classList.toggle('is-active', isActive);
+                    dot.setAttribute('aria-current', String(isActive));
+                });
+            };
+
+            featuredNews.querySelector('[data-featured-news-prev]').addEventListener('click', () => {
+                showFeaturedSlide(activeFeaturedSlide - 1);
+            });
+            featuredNews.querySelector('[data-featured-news-next]').addEventListener('click', () => {
+                showFeaturedSlide(activeFeaturedSlide + 1);
+            });
+            featuredDots.forEach((dot, index) => {
+                dot.addEventListener('click', () => showFeaturedSlide(index));
+            });
+            showFeaturedSlide(0);
+        }
+
+        const catalogSlider = document.querySelector('.catalog-slider-track');
+        if (catalogSlider) {
+            const catalogCards = [...catalogSlider.children];
+            const catalogPrevious = document.querySelector('[data-catalog-prev]');
+            const catalogNext = document.querySelector('[data-catalog-next]');
+            const catalogGap = Number.parseFloat(getComputedStyle(catalogSlider).columnGap) || 0;
+            let catalogLoopWidth = 0;
+            let catalogFrame = null;
+            let previousFrameTime = 0;
+            let resumeTimer = null;
+            let isCatalogHovered = false;
+            let isCatalogFocused = false;
+            let isCatalogVisible = false;
+            const reduceCatalogMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+            catalogCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                clone.inert = true;
+                catalogSlider.append(clone);
+            });
+
+            const measureCatalogLoop = () => {
+                catalogLoopWidth = catalogCards.reduce((width, card) => width + card.getBoundingClientRect().width, 0)
+                    + catalogGap * catalogCards.length;
+            };
+
+            const moveCatalogSlider = direction => {
+                const card = catalogCards[0];
+                const step = card.getBoundingClientRect().width + catalogGap;
+                const targetScroll = catalogSlider.scrollLeft + direction * step;
+                if (targetScroll < 0) {
+                    catalogSlider.scrollLeft += catalogLoopWidth;
+                } else if (targetScroll >= catalogLoopWidth * 2) {
+                    catalogSlider.scrollLeft -= catalogLoopWidth;
+                }
+                catalogSlider.scrollBy({
+                    left: direction * step,
+                    behavior: reduceCatalogMotion.matches ? 'auto' : 'smooth'
+                });
+                pauseCatalogAutoplay();
+            };
+
+            catalogPrevious.addEventListener('click', () => moveCatalogSlider(-1));
+            catalogNext.addEventListener('click', () => moveCatalogSlider(1));
+
+            const pauseCatalogAutoplay = () => {
+                previousFrameTime = 0;
+                window.clearTimeout(resumeTimer);
+                resumeTimer = window.setTimeout(() => {
+                    resumeTimer = null;
+                }, 1800);
+            };
+
+            const shouldPauseCatalog = () => reduceCatalogMotion.matches
+                || document.hidden
+                || !isCatalogVisible
+                || isCatalogHovered
+                || isCatalogFocused
+                || resumeTimer !== null;
+
+            const animateCatalog = timestamp => {
+                if (shouldPauseCatalog()) {
+                    catalogFrame = null;
+                    previousFrameTime = 0;
+                    catalogSlider.classList.remove('is-autoplaying');
+                    return;
+                }
+                catalogSlider.classList.add('is-autoplaying');
+                if (previousFrameTime) {
+                    catalogSlider.scrollLeft += Math.min(timestamp - previousFrameTime, 50) * 0.025;
+                    if (catalogSlider.scrollLeft >= catalogLoopWidth) {
+                        catalogSlider.scrollLeft -= catalogLoopWidth;
+                    }
+                }
+                previousFrameTime = timestamp;
+                catalogFrame = window.requestAnimationFrame(animateCatalog);
+            };
+
+            const scheduleCatalogAutoplay = () => {
+                if (catalogFrame === null && !shouldPauseCatalog()) {
+                    catalogSlider.classList.add('is-autoplaying');
+                    catalogFrame = window.requestAnimationFrame(animateCatalog);
+                }
+            };
+
+            catalogSlider.addEventListener('pointerenter', () => {
+                isCatalogHovered = true;
+            });
+            catalogSlider.addEventListener('pointerleave', () => {
+                isCatalogHovered = false;
+                scheduleCatalogAutoplay();
+            });
+            catalogSlider.addEventListener('focusin', () => {
+                isCatalogFocused = true;
+            });
+            catalogSlider.addEventListener('focusout', event => {
+                if (!catalogSlider.contains(event.relatedTarget)) {
+                    isCatalogFocused = false;
+                    scheduleCatalogAutoplay();
+                }
+            });
+            catalogSlider.addEventListener('wheel', pauseCatalogAutoplay, { passive: true });
+            catalogSlider.addEventListener('touchstart', pauseCatalogAutoplay, { passive: true });
+            document.addEventListener('visibilitychange', scheduleCatalogAutoplay);
+            window.addEventListener('resize', measureCatalogLoop);
+            new IntersectionObserver(([entry]) => {
+                isCatalogVisible = entry.isIntersecting;
+                if (!isCatalogVisible && catalogFrame !== null) {
+                    window.cancelAnimationFrame(catalogFrame);
+                    catalogFrame = null;
+                } else {
+                    scheduleCatalogAutoplay();
+                }
+            }).observe(catalogSlider);
+            measureCatalogLoop();
+            scheduleCatalogAutoplay();
+        }
+
+        const pillarGrid = document.querySelector('.pillar-grid');
+        if (pillarGrid && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const pillarCards = [...pillarGrid.children];
+            let pillarScrollFrame = null;
+            pillarGrid.classList.add('scroll-interactive');
+
+            const updatePillarVisibility = () => {
+                const viewportHeight = window.innerHeight;
+                const fadeDistance = viewportHeight * 0.3;
+
+                pillarCards.forEach(card => {
+                    const bounds = card.getBoundingClientRect();
+                    const center = bounds.top + bounds.height / 2;
+                    const visibility = Math.max(0, Math.min(1, center / fadeDistance, (viewportHeight - center) / fadeDistance));
+                    const easedVisibility = visibility * visibility * (3 - 2 * visibility);
+
+                    card.style.setProperty('--pillar-opacity', easedVisibility.toFixed(3));
+                    card.style.setProperty('--pillar-offset', `${((1 - easedVisibility) * 22).toFixed(1)}px`);
+                    card.style.setProperty('--pillar-scale', (0.97 + easedVisibility * 0.03).toFixed(3));
+                });
+                pillarScrollFrame = null;
+            };
+
+            const schedulePillarUpdate = () => {
+                if (pillarScrollFrame === null) {
+                    pillarScrollFrame = window.requestAnimationFrame(updatePillarVisibility);
+                }
+            };
+
+            window.addEventListener('scroll', schedulePillarUpdate, { passive: true });
+            window.addEventListener('resize', schedulePillarUpdate);
+            updatePillarVisibility();
+        }
+
+        const producerGrid = document.querySelector('.producer-grid');
+        if (producerGrid && !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+            producerGrid.classList.add('reveal-on-scroll');
+            const producerObserver = new IntersectionObserver((entries, observer) => {
+                if (entries.some(entry => entry.isIntersecting)) {
+                    producerGrid.classList.add('is-visible');
+                    observer.disconnect();
+                }
+            }, { threshold: 0.15 });
+            producerObserver.observe(producerGrid);
+        }
+
+        const geostoryFrame = document.getElementById('geostory-frame');
+        const openGeostoryFrame = document.getElementById('open-geostory-frame');
+        const closeGeostoryFrame = document.getElementById('close-geostory-frame');
+        const showGeostoryFrame = () => {
+            if (!geostoryFrame.open) geostoryFrame.showModal();
+        };
+        const geostoryGeoDropdown = document.querySelector('#geostory-frame .geo-dropdown');
+        const geostoryGeoMenuToggle = document.getElementById('geostory-geo-menu-toggle');
+        const geostoryGeoMenu = document.getElementById('geostory-geo-menu');
+        const setGeostoryGeoMenuOpen = isOpen => {
+            geostoryGeoDropdown.classList.toggle('is-open', isOpen);
+            geostoryGeoMenuToggle.setAttribute('aria-expanded', String(isOpen));
+            geostoryGeoMenu.setAttribute('aria-hidden', String(!isOpen));
+        };
+        geostoryGeoMenuToggle.addEventListener('click', () => {
+            setGeostoryGeoMenuOpen(geostoryGeoMenuToggle.getAttribute('aria-expanded') !== 'true');
+        });
+        geostoryGeoMenu.addEventListener('click', event => {
+            if (event.target instanceof Element && event.target.closest('a')) {
+                setGeostoryGeoMenuOpen(false);
+            }
+        });
+        document.addEventListener('click', event => {
+            if (event.target instanceof Node && !geostoryGeoDropdown.contains(event.target)) {
+                setGeostoryGeoMenuOpen(false);
+            }
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && geostoryGeoDropdown.classList.contains('is-open')) {
+                setGeostoryGeoMenuOpen(false);
+                geostoryGeoMenuToggle.focus();
+            }
+        });
+        document.querySelectorAll('#geostory-frame .site-header a[href^="#"]').forEach(link => {
+            link.addEventListener('click', event => {
+                event.preventDefault();
+                setGeostoryGeoMenuOpen(false);
+                const targetId = link.getAttribute('href').slice(1);
+                const target = document.getElementById(targetId);
+                geostoryFrame.close();
+                window.history.replaceState(null, '', `#${targetId}`);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        openGeostoryFrame.addEventListener('click', showGeostoryFrame);
+        closeGeostoryFrame.addEventListener('click', () => geostoryFrame.close());
+        geostoryFrame.addEventListener('click', event => {
+            if (event.target === geostoryFrame) geostoryFrame.close();
+        });
+        geostoryFrame.addEventListener('close', () => openGeostoryFrame.focus({ preventScroll: true }));
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && geostoryFrame.open) geostoryFrame.close();
+        });
+        if (new URLSearchParams(window.location.search).get('openGeoStory') === '1') {
+            showGeostoryFrame();
+            window.history.replaceState(null, '', `${window.location.pathname}${window.location.hash}`);
+        }
+
+        const canvas = document.getElementById('globe-canvas');
+        const hero = document.querySelector('.hero-bg');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const scale = Math.min((window.devicePixelRatio || 1) * 2, 3);
+            const { width, height } = canvas.getBoundingClientRect();
+            canvas.width = Math.round(width * scale);
+            canvas.height = Math.round(height * scale);
+            ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let globeRadius = 0;
+        let rotationX = -0.42;
+        let rotationY = -0.18;
+        let targetRotationX = -0.42;
+        let targetRotationY = -0.18;
+        let isDragging = false;
+        let startX, startY;
+
+        hero.addEventListener('pointermove', (e) => {
+            if (isDragging || e.pointerType === 'touch' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const bounds = hero.getBoundingClientRect();
+            const pointerX = ((e.clientX - bounds.left) / bounds.width) * 2 - 1;
+            const pointerY = ((e.clientY - bounds.top) / bounds.height) * 2 - 1;
+            targetRotationY = -0.18 + pointerX * 0.35;
+            targetRotationX = -0.42 + pointerY * 0.2;
+        });
+
+        hero.addEventListener('pointerleave', () => {
+            targetRotationX = -0.42;
+            targetRotationY = -0.18;
+        });
+
+        // Interaksi Mouse / Touch untuk memutar Globe
+        canvas.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            canvas.setPointerCapture(e.pointerId);
+        });
+
+        canvas.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            let deltaX = e.clientX - startX;
+            let deltaY = e.clientY - startY;
+            targetRotationY += deltaX * 0.005;
+            targetRotationX += deltaY * 0.005;
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+
+        canvas.addEventListener('pointerup', () => { isDragging = false; });
+        canvas.addEventListener('pointercancel', () => { isDragging = false; });
+
+        function animate() {
+            const { width, height } = canvas.getBoundingClientRect();
+            ctx.clearRect(0, 0, width, height);
+
+            globeRadius = Math.min(width, height) * 0.36;
+            let centerX = width / 2;
+            let centerY = height / 2 + 12;
+
+            // Auto rotasi pelan jika tidak didrag
+            if (!isDragging) {
+                targetRotationY += 0.002;
+            }
+
+            rotationX += (targetRotationX - rotationX) * 0.1;
+            rotationY += (targetRotationY - rotationY) * 0.1;
+
+            function project(x, y, z) {
+                const x1 = x * Math.cos(rotationY) + z * Math.sin(rotationY);
+                const z1 = -x * Math.sin(rotationY) + z * Math.cos(rotationY);
+                const y2 = y * Math.cos(rotationX) - z1 * Math.sin(rotationX);
+                const z2 = y * Math.sin(rotationX) + z1 * Math.cos(rotationX);
+                const perspective = 1 / (1 - z2 * 0.12);
+                return {
+                    x: centerX + x1 * globeRadius * perspective,
+                    y: centerY + y2 * globeRadius * perspective,
+                    z: z2
+                };
+            }
+
+            function drawCurve(pointAt, color, lineWidth, opacity, visibleOnly = true) {
+                const steps = 220;
+                for (let i = 0; i < steps; i += 2) {
+                    const angle = (i / steps) * Math.PI * 2;
+                    const point = project(...pointAt(angle));
+                    if (visibleOnly && point.z < -0.12) continue;
+                    const depthOpacity = visibleOnly ? 0.72 + Math.max(0, point.z) * 0.28 : 1;
+                    ctx.fillStyle = color.replace('$', String(opacity * depthOpacity));
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, lineWidth * 1.65, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            const globeGlow = ctx.createRadialGradient(
+                centerX - globeRadius * 0.2, centerY - globeRadius * 0.28, globeRadius * 0.04,
+                centerX, centerY, globeRadius * 1.1
+            );
+            globeGlow.addColorStop(0, 'rgba(219, 234, 254, 0.12)');
+            globeGlow.addColorStop(0.72, 'rgba(148, 163, 184, 0.04)');
+            globeGlow.addColorStop(1, 'rgba(20, 18, 18, 0)');
+            ctx.fillStyle = globeGlow;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, globeRadius * 1.1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Latitude and longitude lines create the globe's wireframe.
+            for (let latitude = -75; latitude <= 75; latitude += 15) {
+                const lat = latitude * Math.PI / 180;
+                drawCurve(angle => [
+                    Math.cos(lat) * Math.cos(angle),
+                    Math.sin(lat),
+                    Math.cos(lat) * Math.sin(angle)
+                ], 'rgba(226, 237, 250, $)', latitude === 0 ? 1.65 : 1.5, latitude === 0 ? 0.86 : 0.68);
+            }
+
+            for (let longitude = 0; longitude < 180; longitude += 15) {
+                const lon = longitude * Math.PI / 180;
+                drawCurve(angle => [
+                    Math.cos(angle) * Math.cos(lon),
+                    Math.sin(angle),
+                    Math.cos(angle) * Math.sin(lon)
+                ], 'rgba(241, 246, 255, $)', 1.55, 0.78);
+            }
+
+            for (let i = 0; i < 240; i += 2) {
+                const angle = (i / 240) * Math.PI * 2;
+                ctx.fillStyle = 'rgba(226, 237, 250, 0.54)';
+                ctx.beginPath();
+                ctx.arc(
+                    centerX + Math.cos(angle) * globeRadius,
+                    centerY + Math.sin(angle) * globeRadius,
+                    1.8,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

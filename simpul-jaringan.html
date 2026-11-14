@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Informasi lima pilar penyelenggaraan simpul jaringan geospasial Kabupaten Bantul.">
+    <title>5 Pilar Simpul Jaringan - JARING BANTER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [hidden] { display: none !important; }
+        .site-header {
+            background: rgba(7, 23, 46, .94);
+            border-bottom: 1px solid rgba(148, 182, 220, .16);
+            box-shadow: 0 8px 30px rgba(3, 12, 27, .18);
+        }
+        .site-header nav a { color: #d5e1f0; }
+        .site-header nav a:hover { color: #67e8f9; }
+        .geo-menu-toggle {
+            border: 0;
+            background: transparent;
+            padding: .5rem 0;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+        }
+        .geo-menu-toggle i { transition: transform .2s ease; }
+        .geo-dropdown.is-open .geo-menu-toggle i { transform: rotate(180deg); }
+        .geo-menu {
+            position: absolute;
+            top: calc(100% + 1.15rem);
+            right: 0;
+            width: 12.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: .75rem;
+            background: #fff;
+            padding: .45rem;
+            box-shadow: 0 16px 36px rgba(3, 12, 27, .2);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-.4rem);
+            transition: opacity .18s ease, transform .18s ease, visibility .18s;
+            visibility: hidden;
+        }
+        .geo-dropdown.is-open .geo-menu {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+            visibility: visible;
+        }
+        .site-header nav .geo-menu a {
+            display: block;
+            border-radius: .45rem;
+            padding: .65rem .7rem;
+            color: #1e293b;
+            font-size: .875rem;
+            font-weight: 600;
+            line-height: 1.25rem;
+            white-space: nowrap;
+            transition: background-color .15s, color .15s;
+        }
+        .site-header nav .geo-menu a:hover,
+        .site-header nav .geo-menu a:focus-visible {
+            background: #f1f5f9;
+            color: #1d4ed8;
+            outline: none;
+        }
+        .site-header .social-link {
+            background: rgba(255, 255, 255, .1);
+            color: #dbeafe;
+        }
+        .site-header .social-link:hover { background: #2563eb; color: #fff; }
+        @media (max-width: 640px) {
+            .site-header > div { height: 68px; padding-right: 1rem; padding-left: 1rem; }
+        }
+        .pillar-layout {
+            grid-template-areas:
+                "navigation"
+                "content";
+        }
+        .pillar-navigation { grid-area: navigation; }
+        .pillar-content { grid-area: content; }
+        @media (min-width: 1024px) {
+            .pillar-layout {
+                grid-template-areas: "content navigation";
+                grid-template-columns: minmax(0, 1fr) 380px;
+            }
+        }
+    </style>
+    
+    
+</head>
+<body class="min-h-screen bg-[#f7f8fc] text-slate-800 antialiased">
+    <header class="site-header fixed left-0 right-0 top-0 z-50 backdrop-blur-md text-white">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 h-[72px]">
+            <a href="index.html#top" class="flex min-w-0 items-center gap-3" aria-label="Jaring Banter, kembali ke beranda">
+                <span>
+                    <span class="block text-lg font-extrabold leading-tight tracking-tight">Jaring<span class="text-sky-300">Banter</span></span>
+                    <span class="block whitespace-nowrap text-[10px] font-medium text-slate-300">Satu Data Geospasial Kabupaten Bantul</span>
+                </span>
+            </a>
+            <nav class="hidden items-center gap-8 text-sm font-semibold md:flex">
+                <a href="index.html#top" class="transition">Beranda</a>
+                <a href="index.html#data-summary-title" class="transition">Sedata Sebantul</a>
+                <a href="index.html#katalog-data" class="transition">Katalog Data</a>
+                <a href="index.html#geostory" class="transition">Infografis</a>
+                <div class="geo-dropdown relative">
+                    <button type="button" id="geo-menu-toggle" class="geo-menu-toggle flex items-center gap-2 transition" aria-haspopup="true" aria-expanded="false" aria-controls="geo-menu">
+                        Tentang <i class="fa-solid fa-chevron-down text-[10px]" aria-hidden="true"></i>
+                    </button>
+                    <div id="geo-menu" class="geo-menu" aria-label="Tentang Jaring Banter" aria-hidden="true">
+                        <a href="index.html#simpul-jaringan">Simpul Jaringan</a>
+                        <a href="index.html#kategori-data">Kategori Data</a>
+                        <a href="index.html#produsen-data">Produsen Data</a>
+                        <a href="index.html#kolaborasi-dataset">Kolaborasi Dataset</a>
+                        <a href="index.html#integrasi">Integrasi</a>
+                        <a href="index.html#kabar-geospasial">Kabar Geospasial</a>
+                        <a href="index.html#geostory">GeoStory</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="flex items-center gap-2 text-slate-700">
+                <a href="index.html#hero-dataset-search" aria-label="Cari data geospasial" class="social-link flex h-9 w-9 items-center justify-center rounded-full transition"><i class="fa-solid fa-magnifying-glass text-sm"></i></a>
+                <a href="https://www.youtube.com/c/BantulTV" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="social-link flex h-9 w-9 items-center justify-center rounded-full transition"><i class="fa-brands fa-youtube text-sm"></i></a>
+                <a href="https://www.instagram.com/pemkabbantul/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-link flex h-9 w-9 items-center justify-center rounded-full transition"><i class="fa-brands fa-instagram text-base"></i></a>
+                <a href="https://bantulkab.go.id/hubungi_kami.html" target="_blank" rel="noopener noreferrer" aria-label="Layanan bantuan" class="social-link flex h-9 w-9 items-center justify-center rounded-full transition"><i class="fa-solid fa-headset text-sm"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-[68px] md:pt-[72px]">
+        <section class="bg-white">
+            <div class="mx-auto max-w-7xl px-5 py-8 md:px-8 md:py-10">
+                <div>
+                    <div class="max-w-4xl">
+                        <h1 class="text-3xl font-extrabold leading-tight tracking-tight text-slate-900 md:text-4xl">
+                            5 Pilar Penyelenggaraan Simpul Jaringan Geospasial
+                        </h1>
+                        <p class="mt-2 max-w-4xl text-sm leading-relaxed text-slate-600 md:text-base">
+                            Kerangka tata kelola Satu Data Geospasial Kabupaten Bantul yang terintegrasi, akurat, dan berkelanjutan untuk mendukung perencanaan daerah sesuai standar Badan Informasi Geospasial (BIG).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pillar-layout mx-auto grid max-w-7xl gap-6 px-5 py-8 md:px-8 lg:py-10">
+            <aside class="pillar-navigation h-fit rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:p-5">
+                <div class="mb-4 flex items-center justify-between gap-3">
+                    <h2 class="text-base font-extrabold text-slate-900">Navigasi Pilar Tata Kelola</h2>
+                </div>
+                <p class="mb-4 text-[11px] leading-relaxed text-slate-500">Pilih pilar untuk meninjau status operasional dan regulasi daerah.</p>
+
+                <div role="tablist" aria-label="Pilar tata kelola" class="space-y-1.5">
+                    <button id="tab-kebijakan" type="button" role="tab" aria-selected="false" aria-controls="panel-kebijakan" data-pillar="kebijakan" class="pillar-tab flex w-full cursor-pointer items-start gap-2 rounded-xl border-l-4 border-transparent px-2.5 py-2.5 text-left transition hover:bg-teal-50 active:scale-[.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                        <span data-tab-number class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-50 font-mono text-[10px] font-bold text-teal-700">01</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="flex items-center justify-between gap-2"><span class="text-sm font-semibold">Kebijakan</span></span>
+                            <span class="mt-0.5 block text-[10px] leading-relaxed text-slate-500">Payung hukum dan regulasi daerah</span>
+                        </span>
+                    </button>
+                    <button id="tab-kelembagaan" type="button" role="tab" aria-selected="false" aria-controls="panel-kelembagaan" data-pillar="kelembagaan" class="pillar-tab flex w-full cursor-pointer items-start gap-2 rounded-xl border-l-4 border-transparent px-2.5 py-2.5 text-left transition hover:bg-teal-50 active:scale-[.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                        <span data-tab-number class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-50 font-mono text-[10px] font-bold text-teal-700">02</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="flex items-center justify-between gap-2"><span class="text-sm font-semibold">Kelembagaan</span></span>
+                            <span class="mt-0.5 block text-[10px] leading-relaxed text-slate-500">Struktur tata kerja OPD dan walidata</span>
+                        </span>
+                    </button>
+                    <button id="tab-teknologi" type="button" role="tab" aria-selected="true" aria-controls="panel-teknologi" data-pillar="teknologi" class="pillar-tab flex w-full cursor-pointer items-start gap-2 rounded-xl border-l-4 border-teal-600 bg-teal-50 px-2.5 py-2.5 text-left shadow-sm transition hover:bg-teal-50 active:scale-[.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                        <span data-tab-number class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-600 font-mono text-[10px] font-bold text-white">03</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="flex items-center justify-between gap-2"><span class="text-sm font-semibold">Teknologi</span></span>
+                            <span class="mt-0.5 block text-[10px] leading-relaxed text-slate-600">Infrastruktur komputasi, SIG &amp; integrasi</span>
+                        </span>
+                    </button>
+                    <button id="tab-standar" type="button" role="tab" aria-selected="false" aria-controls="panel-standar" data-pillar="standar" class="pillar-tab flex w-full cursor-pointer items-start gap-2 rounded-xl border-l-4 border-transparent px-2.5 py-2.5 text-left transition hover:bg-teal-50 active:scale-[.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                        <span data-tab-number class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-50 font-mono text-[10px] font-bold text-teal-700">04</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="flex items-center justify-between gap-2"><span class="text-sm font-semibold">Standar Data &amp; IG</span></span>
+                            <span class="mt-0.5 block text-[10px] leading-relaxed text-slate-500">KUGI, katalog unsur dan validasi topologi</span>
+                        </span>
+                    </button>
+                    <button id="tab-sdm" type="button" role="tab" aria-selected="false" aria-controls="panel-sdm" data-pillar="sdm" class="pillar-tab flex w-full cursor-pointer items-start gap-2 rounded-xl border-l-4 border-transparent px-2.5 py-2.5 text-left transition hover:bg-teal-50 active:scale-[.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                        <span data-tab-number class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal-50 font-mono text-[10px] font-bold text-teal-700">05</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="flex items-center justify-between gap-2"><span class="text-sm font-semibold">Sumber Daya Manusia</span></span>
+                            <span class="mt-0.5 block text-[10px] leading-relaxed text-slate-500">Kapasitas surveyor, operator dan analis SIG</span>
+                        </span>
+                    </button>
+                </div>
+            </aside>
+
+            <div class="pillar-content min-w-0 space-y-5">
+                <section id="panel-kebijakan" role="tabpanel" aria-labelledby="tab-kebijakan" hidden class="pillar-panel space-y-5">
+                    <div class="rounded-2xl bg-gradient-to-r from-cyan-800 to-teal-600 p-6 text-white md:p-8">
+                        <p class="font-mono text-[10px] font-bold uppercase tracking-wider text-teal-100">Penyelenggaraan kebijakan <span class="mx-1">•</span> Payung hukum</p>
+                        <h2 class="mt-2 text-2xl font-extrabold md:text-3xl">Pilar I: Kebijakan dan Regulasi</h2>
+                        <div class="mt-5 flex flex-wrap gap-2 text-[10px]">
+                            <span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-scale-balanced mr-1.5"></i> Peraturan Bupati</span>
+                            <span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-list-check mr-1.5"></i> Daftar Data</span>
+                            <span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-file-signature mr-1.5"></i> SOP Simpul Jaringan</span>
+                        </div>
+                    </div>
+                    <div class="space-y-4" aria-label="Dokumen kebijakan geospasial Kabupaten Bantul">
+                        <a href="https://data.bantulkab.go.id/file/publikasi/Keputusan%20Bupati%20Bantul%20Nomor%20428%20Tahun%202022%20tentang%20Roadmap%20Penyelenggaraan%20Informasi%20Geospasial%20Kabupaten%20Bantul.pdf" target="_blank" rel="noopener noreferrer" aria-label="Buka Roadmap Penyelenggaraan Informasi Geospasial Kabupaten Bantul (PDF) di tab baru" class="group block rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm transition hover:border-teal-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                            <article>
+                                <h3 class="text-sm font-semibold text-slate-700 group-hover:text-teal-800">Roadmap Penyelenggaraan Informasi Geospasial Kabupaten Bantul</h3>
+                                <p class="mt-1 text-xs leading-relaxed text-slate-400">Keputusan Bupati Bantul Nomor 428 Tahun 2022 tentang Roadmap Penyelenggaraan Informasi Geospasial Kabupaten Bantul</p>
+                            </article>
+                        </a>
+                        <a href="https://data.bantulkab.go.id/file/publikasi/Keputusan%20Bupati%20Bantul%20Nomor%20186%20Tahun%202026%20tentang%20Daftar%20Data%20Statistik%20dan%20Data%20Geospasial%20Tahun%202026.pdf" target="_blank" rel="noopener noreferrer" aria-label="Buka Daftar Data Statistik dan Data Geospasial Tahun 2026 (PDF) di tab baru" class="group block rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm transition hover:border-teal-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                            <article>
+                                <h3 class="text-sm font-semibold text-slate-700 group-hover:text-teal-800">Daftar Data Statistik dan Data Geospasial Tahun 2026</h3>
+                                <p class="mt-1 text-xs leading-relaxed text-slate-400">Keputusan Bupati Bantul Nomor 186 Tahun 2026 tentang Daftar Data Statistik dan Data Geospasial Tahun 2026</p>
+                            </article>
+                        </a>
+                        <a href="https://jdih.bantulkab.go.id/produkhukum/detail/7052/peraturan-bupati-tahun-2026-nomor-41.html" target="_blank" rel="noopener noreferrer" aria-label="Buka Peraturan Bupati Bantul Nomor 41 Tahun 2026 tentang Rencana Aksi Satu Data di tab baru" class="group block rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm transition hover:border-teal-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                            <article>
+                                <h3 class="text-sm font-semibold text-slate-700 group-hover:text-teal-800">Rencana Aksi Satu Data Tahun 2026-2029</h3>
+                                <p class="mt-1 text-xs leading-relaxed text-slate-400">Peraturan Bupati Bantul Nomor 41 Tahun 2026 tentang Rencana Aksi Satu Data Tahun 2026-2029</p>
+                            </article>
+                        </a>
+                    </div>
+                </section>
+
+                <section id="panel-kelembagaan" role="tabpanel" aria-labelledby="tab-kelembagaan" hidden class="pillar-panel space-y-5">
+                    <div class="rounded-2xl bg-gradient-to-r from-cyan-800 to-teal-600 p-6 text-white md:p-8">
+                        <p class="font-mono text-[10px] font-bold uppercase tracking-wider text-teal-100">Penyelenggaraan organisasi <span class="mx-1">•</span> Kolaborasi lintas OPD</p>
+                        <h2 class="mt-2 text-2xl font-extrabold md:text-3xl">Pilar II: Kelembagaan Simpul Jaringan</h2>
+                        <div class="mt-5 flex flex-wrap gap-2 text-[10px]"><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-building mr-1.5"></i> Perangkat Daerah</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-user-check mr-1.5"></i> Walidata</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-people-group mr-1.5"></i> Produsen Data</span></div>
+                    </div>
+                    <a href="https://data.bantulkab.go.id/file/publikasi/Keputusan%20Bupati%20Bantul%20Nomor%2057%20Tahun%202026%20tentang%20Pembentukan%20Tim%20Penyelenggara%20Satu%20Data%20Kabupaten%20Bantul%20Tahun%202026.pdf" target="_blank" rel="noopener noreferrer" aria-label="Buka Keputusan Bupati Bantul Nomor 57 Tahun 2026 tentang Pembentukan Tim Penyelenggara Satu Data Kabupaten Bantul (PDF) di tab baru" class="group block rounded-xl border border-slate-200 bg-white px-6 py-4 shadow-sm transition hover:border-teal-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2">
+                        <article>
+                            <h3 class="text-sm font-semibold text-slate-700 group-hover:text-teal-800">Tim Penyelenggara Satu Data Kabupaten Bantul Tahun 2026</h3>
+                            <p class="mt-1 text-xs leading-relaxed text-slate-400">Keputusan Bupati Bantul Nomor 57 Tahun 2026 tentang Pembentukan Tim Penyelenggara Satu Data Kabupaten Bantul Tahun 2026</p>
+                        </article>
+                    </a>
+                </section>
+
+                <section id="panel-teknologi" role="tabpanel" aria-labelledby="tab-teknologi" class="pillar-panel space-y-5">
+                    <div class="rounded-2xl bg-gradient-to-r from-cyan-800 to-teal-600 p-6 text-white md:p-8">
+                        <p class="font-mono text-[10px] font-bold uppercase tracking-wider text-teal-100">Penyelenggaraan infrastruktur <span class="mx-1">•</span> Kompatibilitas OGC</p>
+                        <h2 class="mt-2 text-2xl font-extrabold md:text-3xl">Pilar III: Teknologi Penyelenggaraan Geospasial</h2>
+                        <div class="mt-5 flex flex-wrap gap-2 text-[10px]"><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-cloud mr-1.5"></i> Infrastruktur Mandiri Cloud</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-right-left mr-1.5"></i> Standar OGC WMS/WFS</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-location-crosshairs mr-1.5"></i> Akurasi Sub-Meter Presisi</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-table-cells mr-1.5"></i> Sinkron Sedata Sebantul</span></div>
+                    </div>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
+                        <div class="space-y-5 text-sm leading-relaxed text-slate-600">
+                            <p>Penyelenggaraan Simpul Jaringan Informasi Geospasial Kabupaten Bantul didukung oleh teknologi perangkat lunak dan perangkat keras untuk mendukung kegiatan pengumpulan, pengolahan, penyimpanan, dan penyajian data geospasial.</p>
+                            <p>Seluruh Unit Produksi/Produsen Data memanfaatkan Quantum GIS (QGIS) sebagai perangkat lunak Sistem Informasi Geografis (SIG) untuk mengelola, menganalisis, dan memvisualisasikan data geospasial. QGIS bersifat open source, mudah diakses, dan mampu mendukung pengelolaan data geospasial vektor maupun raster secara efektif.</p>
+                            <p>Kualitas data geospasial diawali dengan kegiatan pengumpulan data geospasial yang didukung oleh perangkat survei yang memadai. Berbagai peralatan seperti GPS Handheld, Total Station, Distometer, Waterpass, dan UAV/Drone dimanfaatkan sesuai kebutuhan Perangkat Daerah, serta dipelihara dan diperiksa secara berkala sesuai standar yang berlaku guna menjaga ketelitian dan keakuratan hasil pengukuran.</p>
+                            <p>Geoportal Bantul juga telah terintegrasi dengan Portal Sedata Sebantul sehingga peta spasial dapat dibangun langsung dari data statistik yang telah tersedia. Integrasi ini menghilangkan kebutuhan input data berulang, mempercepat penyajian informasi, serta menjaga konsistensi data statistik dan geospasial.</p>
+                        </div>
+                    </article>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
+                        <p class="font-mono text-[9px] font-semibold uppercase tracking-wider text-slate-400">Komponen utama 02</p>
+                        <h3 class="mt-1 text-lg font-extrabold text-slate-900">Layanan dan Interoperabilitas Data</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-slate-600">Layanan peta dan fitur berbasis standar interoperabilitas membantu pertukaran informasi geospasial antar sistem.</p>
+                    </article>
+                </section>
+
+                <section id="panel-standar" role="tabpanel" aria-labelledby="tab-standar" hidden class="pillar-panel space-y-5">
+                    <div class="rounded-2xl bg-gradient-to-r from-cyan-800 to-teal-600 p-6 text-white md:p-8">
+                        <p class="font-mono text-[10px] font-bold uppercase tracking-wider text-teal-100">Penyelenggaraan kualitas data <span class="mx-1">•</span> Acuan bersama</p>
+                        <h2 class="mt-2 text-2xl font-extrabold md:text-3xl">Pilar IV: Standar Data &amp; Informasi Geospasial</h2>
+                        <div class="mt-5 flex flex-wrap gap-2 text-[10px]"><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-list mr-1.5"></i> KUGI</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-tags mr-1.5"></i> Metadata</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-check-double mr-1.5"></i> Validasi data</span></div>
+                    </div>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
+                        <p class="text-sm leading-relaxed text-slate-600">Pengelolaan Informasi Geospasial di Kabupaten Bantul didukung oleh infrastruktur yang memenuhi standar keamanan informasi melalui Data Center bersertifikasi ISO 27001:2022. Selain itu, Metadata Spasial disusun sesuai SNI 8843:2019/ISO 19115 untuk menjamin keterpaduan dan kemudahan pertukaran data, serta data geospasial dan informasi geospasial dilengkapi dengan Katalog Unsur Geografi Indonesia (KUGI) guna mendukung standardisasi dan interoperabilitas data geospasial.</p>
+                    </article>
+                </section>
+
+                <section id="panel-sdm" role="tabpanel" aria-labelledby="tab-sdm" hidden class="pillar-panel space-y-5">
+                    <div class="rounded-2xl bg-gradient-to-r from-cyan-800 to-teal-600 p-6 text-white md:p-8">
+                        <p class="font-mono text-[10px] font-bold uppercase tracking-wider text-teal-100">Penyelenggaraan kapasitas <span class="mx-1">•</span> Pengembangan kompetensi</p>
+                        <h2 class="mt-2 text-2xl font-extrabold md:text-3xl">Pilar V: Sumber Daya Manusia</h2>
+                        <div class="mt-5 flex flex-wrap gap-2 text-[10px]"><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-user-gear mr-1.5"></i> Operator SIG</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-compass-drafting mr-1.5"></i> Surveyor</span><span class="rounded-md bg-white/15 px-3 py-1.5"><i class="fa-solid fa-graduation-cap mr-1.5"></i> Bimbingan teknis</span></div>
+                    </div>
+                    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-7">
+                        <p class="text-sm leading-relaxed text-slate-600">Penyelenggaraan Simpul Jaringan Informasi Geospasial Kabupaten Bantul didukung oleh Sumber Daya Manusia (SDM) ASN maupun Non ASN dengan latar belakang pendidikan bidang Informasi Geospasial dan sejenisnya meliputi Geografi, Geodesi, Geomatika, Perencanaan Wilayah, Sistem Informasi, Informatika serta Kebumian Lainnya (Kelautan/Pertanian/Geologi/dan lain-lain) pada Unit Produksi/Produsen Data di Kabupaten Bantul.</p>
+                    </article>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white py-5">
+        <div class="mx-auto flex max-w-7xl flex-col gap-3 px-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between md:px-8">
+            <span>© 2026 JARING BANTER · Kabupaten Bantul</span>
+        </div>
+    </footer>
+
+    <script>
+        const tabs = Array.from(document.querySelectorAll('[role="tab"][data-pillar]'));
+        const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+
+        function selectPillar(pillar, updateHistory) {
+            const selectedTab = tabs.find((tab) => tab.dataset.pillar === pillar);
+            if (!selectedTab) return;
+
+            tabs.forEach((tab) => {
+                const isSelected = tab === selectedTab;
+                tab.setAttribute('aria-selected', String(isSelected));
+                tab.tabIndex = isSelected ? 0 : -1;
+                tab.classList.toggle('border-teal-600', isSelected);
+                tab.classList.toggle('bg-teal-50', isSelected);
+                tab.classList.toggle('shadow-sm', isSelected);
+                tab.classList.toggle('border-transparent', !isSelected);
+                if (!isSelected) tab.classList.remove('bg-teal-50');
+
+                const number = tab.querySelector('[data-tab-number]');
+                number.classList.toggle('bg-teal-600', isSelected);
+                number.classList.toggle('text-white', isSelected);
+                number.classList.toggle('bg-teal-50', !isSelected);
+                number.classList.toggle('text-teal-700', !isSelected);
+
+            });
+
+            panels.forEach((panel) => {
+                panel.hidden = panel.id !== `panel-${pillar}`;
+            });
+
+            if (updateHistory) {
+                history.replaceState(null, '', `#pilar-${pillar}`);
+            }
+        }
+
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => selectPillar(tab.dataset.pillar, true));
+            tab.addEventListener('keydown', (event) => {
+                let nextIndex = index;
+                if (event.key === 'ArrowDown' || event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+                else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+                else if (event.key === 'Home') nextIndex = 0;
+                else if (event.key === 'End') nextIndex = tabs.length - 1;
+                else return;
+
+                event.preventDefault();
+                tabs[nextIndex].focus();
+                selectPillar(tabs[nextIndex].dataset.pillar, true);
+            });
+        });
+
+        const requestedPillar = window.location.hash.replace('#pilar-', '');
+        selectPillar(requestedPillar || 'teknologi', false);
+    </script>
+    <script>
+        (() => {
+            const dropdown = document.querySelector('.geo-dropdown');
+            const toggle = document.getElementById('geo-menu-toggle');
+            const menu = document.getElementById('geo-menu');
+            if (!dropdown || !toggle || !menu) return;
+
+            const setOpen = isOpen => {
+                dropdown.classList.toggle('is-open', isOpen);
+                toggle.setAttribute('aria-expanded', String(isOpen));
+                menu.setAttribute('aria-hidden', String(!isOpen));
+            };
+
+            toggle.addEventListener('click', () => {
+                setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+            });
+            menu.addEventListener('click', event => {
+                if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
+            });
+            document.addEventListener('click', event => {
+                if (event.target instanceof Node && !dropdown.contains(event.target)) setOpen(false);
+            });
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && dropdown.classList.contains('is-open')) {
+                    setOpen(false);
+                    toggle.focus();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
